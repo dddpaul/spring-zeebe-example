@@ -1,4 +1,4 @@
-package io.camunda.zeebe.spring.example;
+package com.github.dddpaul.zeebeexample;
 
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.client.api.response.ActivatedJob;

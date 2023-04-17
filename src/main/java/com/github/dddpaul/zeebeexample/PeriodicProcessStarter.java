@@ -1,4 +1,4 @@
-package io.camunda.zeebe.spring.example;
+package com.github.dddpaul.zeebeexample;
 
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @Component
 public class PeriodicProcessStarter {
 
-  private static Logger log = LoggerFactory.getLogger(ExampleApplication.class);
+  private static Logger log = LoggerFactory.getLogger(PeriodicProcessStarter.class);
 
   @Autowired
   private ZeebeClient client;
