@@ -13,12 +13,14 @@ import io.camunda.zeebe.spring.client.exception.ZeebeBpmnError;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value = "app.worker", havingValue = "true")
 public class ExampleJobWorkers {
 
-  private static Logger log = LoggerFactory.getLogger(ExampleJobWorkers.class);
+  private static final Logger log = LoggerFactory.getLogger(ExampleJobWorkers.class);
 
   @JobWorker(type = "foo") // autoComplete = true as default value
   public void handleFooJob(final ActivatedJob job) {
@@ -26,7 +28,8 @@ public class ExampleJobWorkers {
   }
 
   @JobWorker() // type is set to method name: "bar".
-  public Map<String, Object> bar(final ActivatedJob job, @Variable String a) {
+  public Map<String, Object> bar(final ActivatedJob job, @Variable String a) throws InterruptedException {
+    Thread.sleep(5000);
     logJob(job, a);
     return Collections.singletonMap("someResult", "42");
   }
