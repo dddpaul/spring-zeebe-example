@@ -1,0 +1,32 @@
+# Configuration for Zeebe client
+zeebe:
+  client:
+    # IP address and port of the Zeebe gateway
+    broker:
+      gateway-address: 192.168.0.100:26500
+    # Enable plaintext authentication
+    security:
+      plaintext: true
+    # Request timeout in seconds
+    # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultRequestTimeout, default = 10s
+    request-timeout: 10s
+    worker:
+      # Maximum number of jobs to be activated at the same time
+      # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.jobWorkerMaxJobsActive, default = 32
+      max-jobs-active: 64
+      # Number of worker threads processing jobs in parallel
+      # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.numJobWorkerExecutionThreads, default = 1
+      threads: 8
+      job:
+        # Poll interval for job activation requests
+        # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobPollInterval, default = 100ms
+        poll-interval: 100ms
+
+# Configuration for the application
+app:
+  worker:
+    enabled: false
+  scheduler:
+    enabled: true
+    # Maximum number of scheduled tasks
+    count: 100

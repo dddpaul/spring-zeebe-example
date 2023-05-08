@@ -17,7 +17,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(value = "app.worker", havingValue = "true")
+@ConditionalOnProperty(value = "app.worker.enabled", havingValue = "true")
 public class ExampleJobWorkers {
 
   private static final Logger log = LoggerFactory.getLogger(ExampleJobWorkers.class);
