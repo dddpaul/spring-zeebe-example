@@ -7,25 +7,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Component
-@ConditionalOnProperty(value = "app.scheduler.enabled", havingValue = "true")
-public class PeriodicProcessStarter {
+@ConditionalOnProperty(value = "app.starter.enabled", havingValue = "true")
+public class ProcessStarter {
 
-    private static final Logger log = LoggerFactory.getLogger(PeriodicProcessStarter.class);
+    private static final Logger log = LoggerFactory.getLogger(ProcessStarter.class);
 
-    @Value("${app.scheduler.count}")
+    @Value("${app.starter.count}")
     private long count = 0;
 
     @Autowired
     private ZeebeClient client;
 
-    @Scheduled(initialDelay = 1, fixedDelay = 1)
     public void startProcesses() {
         for (long i = 0; i < count; i++) {
             final ProcessInstanceEvent event = client

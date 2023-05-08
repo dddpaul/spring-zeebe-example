@@ -5,7 +5,6 @@ import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import io.camunda.zeebe.spring.client.annotation.Variable;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 
@@ -18,9 +17,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "app.worker.enabled", havingValue = "true")
-public class ExampleJobWorkers {
+public class JobWorkers {
 
-  private static final Logger log = LoggerFactory.getLogger(ExampleJobWorkers.class);
+  private static final Logger log = LoggerFactory.getLogger(JobWorkers.class);
 
   @JobWorker(type = "foo") // autoComplete = true as default value
   public void handleFooJob(final ActivatedJob job) {
