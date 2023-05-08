@@ -25,8 +25,8 @@ zeebe:
 # Configuration for the application
 app:
   worker:
-    enabled: true
+    enabled: false
   starter:
-    enabled: true
+    enabled: false
     # Maximum number of scheduled tasks
     count: 100
