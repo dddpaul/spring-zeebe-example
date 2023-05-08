@@ -25,7 +25,7 @@ class ZeebeExampleApplicationTests {
 	void contextLoads() {
 	}
 
-	@RepeatedTest(1000)
+	@RepeatedTest(100000)
 	void testTasks() throws InterruptedException {
 		final ProcessInstanceEvent event = client
 						.newCreateInstanceCommand()
@@ -35,7 +35,7 @@ class ZeebeExampleApplicationTests {
 						.send()
 						.join();
 
-		log.info("started instance for workflowKey='{}', bpmnProcessId='{}', version='{}' with workflowInstanceKey='{}'",
-				event.getProcessDefinitionKey(), event.getBpmnProcessId(), event.getVersion(), event.getProcessInstanceKey());
+//		log.info("started instance for workflowKey='{}', bpmnProcessId='{}', version='{}' with workflowInstanceKey='{}'",
+//				event.getProcessDefinitionKey(), event.getBpmnProcessId(), event.getVersion(), event.getProcessInstanceKey());
 	}
 }

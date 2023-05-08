@@ -29,7 +29,7 @@ public class ExampleJobWorkers {
 
   @JobWorker() // type is set to method name: "bar".
   public Map<String, Object> bar(final ActivatedJob job, @Variable String a) throws InterruptedException {
-    Thread.sleep(5000);
+//    Thread.sleep(5000);
     logJob(job, a);
     return Collections.singletonMap("someResult", "42");
   }
@@ -41,16 +41,6 @@ public class ExampleJobWorkers {
   }
 
   private static void logJob(final ActivatedJob job, Object parameterValue) {
-    log.info(
-      "complete job\n>>> [type: {}, key: {}, element: {}, workflow instance: {}]\n{deadline; {}]\n[headers: {}]\n[variable parameter: {}\n[variables: {}]",
-      job.getType(),
-      job.getKey(),
-      job.getElementId(),
-      job.getProcessInstanceKey(),
-      Instant.ofEpochMilli(job.getDeadline()),
-      job.getCustomHeaders(),
-      parameterValue,
-      job.getVariables());
   }
 
 }
