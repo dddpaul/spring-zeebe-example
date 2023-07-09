@@ -30,3 +30,21 @@ app:
     enabled: false
     # Maximum number of scheduled tasks
     count: 100
+    # Starter thread pool size
+    threads: 1
+    # BPMN process id
+    process: demoProcess
+    variables:
+      a: "123"
+      b: "456"
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,beans
+  metrics:
+    export:
+      prometheus:
+        enabled: true

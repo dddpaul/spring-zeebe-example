@@ -1,4 +1,4 @@
-package com.github.dddpaul.zeebeexample;
+package com.github.dddpaul.zeebeexample.workers;
 
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.client.api.response.ActivatedJob;

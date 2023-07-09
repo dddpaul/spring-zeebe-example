@@ -1,6 +1,7 @@
 package com.github.dddpaul.zeebeexample;
 
-import io.camunda.zeebe.spring.client.EnableZeebeClient;
+import com.github.dddpaul.zeebeexample.starter.ProcessStarter;
+import com.github.dddpaul.zeebeexample.workers.WorkerProgressBar;
 import io.camunda.zeebe.spring.client.annotation.Deployment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,11 +9,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableZeebeClient
-@Deployment(resources = "classpath:demoProcess.bpmn")
+@Deployment(resources = "classpath*:*.bpmn")
 public class ZeebeExampleApplication implements ApplicationRunner {
 
     @Autowired(required = false)
@@ -21,14 +20,23 @@ public class ZeebeExampleApplication implements ApplicationRunner {
     @Value("${app.starter.enabled:true}")
     private boolean starterEnabled;
 
+    @Autowired(required = false)
+    private WorkerProgressBar worker;
+
+    @Value("${app.worker.enabled:true}")
+    private boolean workerEnabled;
+
     public static void main(String[] args) {
         SpringApplication.run(ZeebeExampleApplication.class, args);
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) throws InterruptedException {
         if (starterEnabled && starter != null) {
-            starter.startProcesses();
+            starter.startParallelProcesses();
+        }
+        if (workerEnabled && worker != null) {
+            worker.startProgressBar();
         }
     }
 }
