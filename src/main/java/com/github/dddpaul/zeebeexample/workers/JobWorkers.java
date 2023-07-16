@@ -1,5 +1,6 @@
 package com.github.dddpaul.zeebeexample.workers;
 
+import com.github.dddpaul.zeebeexample.RiskError;
 import com.github.dddpaul.zeebeexample.RiskLevel;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
@@ -9,8 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
+
+import static com.github.dddpaul.zeebeexample.RiskError.RISK_LEVEL_ERROR;
 
 @Component
 @ConditionalOnProperty(value = "app.worker.enabled", havingValue = "true")
@@ -24,7 +26,7 @@ public class JobWorkers {
             return Map.of("riskLevel", RiskLevel.values()[chance].name().toLowerCase());
         } catch (Exception e) {
             log.error("Error while handle {} application: {}", job.getProcessInstanceKey(), e.getMessage());
-            throw new RuntimeException(e);
+            throw RiskError.create(RISK_LEVEL_ERROR, e.getMessage());
         }
     }
 
