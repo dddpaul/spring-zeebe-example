@@ -73,14 +73,14 @@
     </bpmn:sendTask>
     <bpmn:serviceTask id="Task_ApproveApplication" name="Approve Application">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="approve-app" retries="3" />
+        <zeebe:taskDefinition type="approve-app" retries="1" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0nv2kj0</bpmn:incoming>
       <bpmn:outgoing>Flow_0tirnwp</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Task_RejectApplication" name="Reject Application">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="reject-app" retries="3" />
+        <zeebe:taskDefinition type="reject-app" retries="1" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1qwmj19</bpmn:incoming>
       <bpmn:outgoing>Flow_0psmuqi</bpmn:outgoing>
@@ -93,7 +93,7 @@
     </bpmn:boundaryEvent>
     <bpmn:serviceTask id="Task_DetermineRiskLevel" name="Determine Risk Level">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="risk-level" retries="5" />
+        <zeebe:taskDefinition type="risk-level" retries="1" />
         <zeebe:ioMapping>
           <zeebe:output source="=riskLevel" target="riskLevel" />
         </zeebe:ioMapping>
