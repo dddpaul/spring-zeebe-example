@@ -21,10 +21,10 @@ public class ZeebeExampleApplication implements ApplicationRunner {
     private boolean starterEnabled;
 
     @Autowired(required = false)
-    private WorkerProgressBar worker;
+    private WorkerProgressBar progressBar;
 
-    @Value("${app.worker.enabled:true}")
-    private boolean workerEnabled;
+    @Value("${app.worker.progress-bar.enabled:true}")
+    private boolean workerProgressBarEnabled;
 
     public static void main(String[] args) {
         SpringApplication.run(ZeebeExampleApplication.class, args);
@@ -35,8 +35,8 @@ public class ZeebeExampleApplication implements ApplicationRunner {
         if (starterEnabled && starter != null) {
             starter.startParallelProcesses();
         }
-        if (workerEnabled && worker != null) {
-            worker.startProgressBar();
+        if (workerProgressBarEnabled && progressBar != null) {
+            progressBar.start();
         }
     }
 }

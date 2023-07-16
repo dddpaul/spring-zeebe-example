@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(value = "app.worker.enabled", havingValue = "true")
+@ConditionalOnProperty(value = "app.worker.progress-bar.enabled", havingValue = "true")
 public class WorkerProgressBar {
 
     private static final Logger log = LoggerFactory.getLogger(WorkerProgressBar.class);
@@ -20,7 +20,7 @@ public class WorkerProgressBar {
     @Autowired
     private MeterRegistry registry;
 
-    public void startProgressBar() throws InterruptedException {
+    public void start() throws InterruptedException {
         int i = 1;
         while (true) {
             try (ProgressBar activatedBar = new ProgressBarBuilder()

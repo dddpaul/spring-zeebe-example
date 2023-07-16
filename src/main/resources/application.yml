@@ -26,6 +26,8 @@ zeebe:
 app:
   worker:
     enabled: false
+    progress-bar:
+      enabled: false
   starter:
     enabled: false
     # Maximum number of scheduled tasks
@@ -33,10 +35,10 @@ app:
     # Starter thread pool size
     threads: 1
     # BPMN process id
-    process: demoProcess
+    process: CarInsuranceApplicationProcess
+    random: false
     variables:
-      a: "123"
-      b: "456"
+      chance: 0
 
 # Actuator endpoints
 management:
