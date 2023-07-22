@@ -18,29 +18,25 @@ repositories {
     mavenCentral()
 }
 
-ext {
-    set('testcontainersVersion', "1.17.6")
-    set('springZeebeVersion', "8.2.2")
-}
-
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation "io.camunda:spring-zeebe-starter:${springZeebeVersion}"
+    implementation "io.camunda:spring-zeebe-starter:8.2.3"
     implementation 'me.tongfei:progressbar:0.9.4'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'io.zeebe:zeebe-test-container:3.6.0'
 }
 
 dependencyManagement {
     imports {
-        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+        mavenBom "org.testcontainers:testcontainers-bom:1.17.6"
     }
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }
