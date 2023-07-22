@@ -5,26 +5,22 @@ import io.camunda.zeebe.client.api.response.DeploymentEvent;
 import io.camunda.zeebe.client.api.response.ProcessInstanceResult;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
-import io.zeebe.containers.ZeebeContainer;
+import io.camunda.zeebe.process.test.api.ZeebeTestEngine;
+import io.camunda.zeebe.process.test.extension.ZeebeProcessTest;
+import io.camunda.zeebe.process.test.filters.RecordStream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
+@ZeebeProcessTest
 public class ZeebeExampleTest {
 
-    @Container
-    private final ZeebeContainer zeebeContainer = new ZeebeContainer();
+    private ZeebeTestEngine engine;
+    private ZeebeClient client;
+    private RecordStream recordStream;
 
     @Test
     void shouldConnectToZeebe() {
         // given
-        final ZeebeClient client =
-                ZeebeClient.newClientBuilder()
-                        .gatewayAddress(zeebeContainer.getExternalGatewayAddress())
-                        .usePlaintext()
-                        .build();
         final BpmnModelInstance process =
                 Bpmn.createExecutableProcess("process").startEvent().endEvent().done();
 

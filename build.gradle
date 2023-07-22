@@ -27,8 +27,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
-    testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'io.zeebe:zeebe-test-container:3.6.0'
+    testImplementation 'io.camunda:zeebe-process-test-extension:8.2.8'
 }
 
 dependencyManagement {
