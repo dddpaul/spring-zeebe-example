@@ -47,11 +47,21 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0nv2kj0" sourceRef="Gateway_1oonlek" targetRef="Task_ApproveApplication" />
     <bpmn:endEvent id="EndEvent_ApplicationApproved" name="Application Approved">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=true" target="approved" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0tirnwp</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0tirnwp" sourceRef="Task_ApproveApplication" targetRef="EndEvent_ApplicationApproved" />
     <bpmn:sequenceFlow id="Flow_1qwmj19" sourceRef="Gateway_1frf9zp" targetRef="Task_RejectApplication" />
     <bpmn:endEvent id="EndEvent_ApplicationRejected" name="Application Rejected">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=false" target="approved" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0psmuqi</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0psmuqi" sourceRef="Task_RejectApplication" targetRef="EndEvent_ApplicationRejected" />
@@ -178,14 +188,14 @@
         <dc:Bounds x="340" y="80" width="190" height="40" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_13jy2ih_di" bpmnElement="Event_0nzb365">
+        <dc:Bounds x="272" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1ds7ah3_di" bpmnElement="Timer_Escalate2Days">
         <dc:Bounds x="572" y="322" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="542" y="303" width="35" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_13jy2ih_di" bpmnElement="Event_0nzb365">
-        <dc:Bounds x="272" y="222" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0vbcvpl_di" bpmnElement="Flow_0vbcvpl">
         <di:waypoint x="188" y="200" />
@@ -261,14 +271,14 @@
         <di:waypoint x="750" y="280" />
         <di:waypoint x="802" y="280" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_0i86trb_di" bpmnElement="Association_0i86trb">
-        <di:waypoint x="328" y="160" />
-        <di:waypoint x="366" y="120" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_02kkgm2_di" bpmnElement="Flow_02kkgm2">
         <di:waypoint x="290" y="258" />
         <di:waypoint x="290" y="520" />
         <di:waypoint x="845" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0i86trb_di" bpmnElement="Association_0i86trb">
+        <di:waypoint x="328" y="160" />
+        <di:waypoint x="366" y="120" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

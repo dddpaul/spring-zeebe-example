@@ -35,7 +35,7 @@ app:
     # Starter thread pool size
     threads: 1
     # BPMN process id
-    process: CarInsuranceApplicationProcess
+      process: CarInsuranceApplicationProcess
     random: false
     variables:
       chance: 0
