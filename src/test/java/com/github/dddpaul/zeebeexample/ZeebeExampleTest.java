@@ -8,8 +8,9 @@ import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.process.test.api.ZeebeTestEngine;
 import io.camunda.zeebe.process.test.extension.ZeebeProcessTest;
 import io.camunda.zeebe.process.test.filters.RecordStream;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ZeebeProcessTest
 public class ZeebeExampleTest {
@@ -19,27 +20,29 @@ public class ZeebeExampleTest {
     private RecordStream recordStream;
 
     @Test
-    void shouldConnectToZeebe() {
+    void shouldStartDeployedProcess() {
         // given
-        final BpmnModelInstance process =
-                Bpmn.createExecutableProcess("process").startEvent().endEvent().done();
+        final BpmnModelInstance process = Bpmn.createExecutableProcess("process")
+                .startEvent()
+                .endEvent()
+                .done();
 
         // when
-        // do something (e.g. deploy a process)
-        final DeploymentEvent deploymentEvent =
-                client.newDeployCommand().addProcessModel(process, "process.bpmn").send().join();
+        final DeploymentEvent deploymentEvent = client.newDeployResourceCommand()
+                .addProcessModel(process, "process.bpmn")
+                .send()
+                .join();
 
         // then
-        // verify (e.g. we can create an instance of the deployed process)
-        final ProcessInstanceResult processInstanceResult =
-                client
-                        .newCreateInstanceCommand()
-                        .bpmnProcessId("process")
-                        .latestVersion()
-                        .withResult()
-                        .send()
-                        .join();
-        Assertions.assertThat(processInstanceResult.getProcessDefinitionKey())
+        final ProcessInstanceResult result = client
+                .newCreateInstanceCommand()
+                .bpmnProcessId("process")
+                .latestVersion()
+                .withResult()
+                .send()
+                .join();
+
+        assertThat(result.getProcessDefinitionKey())
                 .isEqualTo(deploymentEvent.getProcesses().get(0).getProcessDefinitionKey());
     }
 }
