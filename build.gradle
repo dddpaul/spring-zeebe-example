@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    implementation "io.camunda:spring-zeebe-starter:8.2.3"
+    implementation "io.camunda:spring-zeebe-starter:8.2.4"
     implementation 'me.tongfei:progressbar:0.9.4'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
