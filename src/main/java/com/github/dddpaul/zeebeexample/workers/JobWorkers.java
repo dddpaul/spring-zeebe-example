@@ -23,9 +23,12 @@ public class JobWorkers {
     @JobWorker(type = "risk-level")
     public Map<String, Object> riskLevel(final ActivatedJob job, @Variable int chance) {
         try {
+            if (chance >= RiskLevel.values().length) {
+                throw new RuntimeException("chance = %d is not acceptable".formatted(chance));
+            }
             return Map.of("riskLevel", RiskLevel.values()[chance].name().toLowerCase());
         } catch (Exception e) {
-            log.error("Error while handle {} application: {}", job.getProcessInstanceKey(), e.getMessage());
+            log.error("Application {} error: {}", job.getProcessInstanceKey(), e.getMessage());
             throw RiskError.create(RISK_LEVEL_ERROR, e.getMessage());
         }
     }
