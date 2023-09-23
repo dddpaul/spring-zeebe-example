@@ -10,6 +10,12 @@ starter:
 	--app.starter.enabled=true --spring.main.web-application-type=none \
 	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
 
+starter-v2:
+	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	--app.starter.enabled=true --spring.main.web-application-type=none \
+	--app.starter.process=CarInsuranceApplicationProcessV2 \
+	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
+
 worker:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar --app.worker.enabled=true
 
