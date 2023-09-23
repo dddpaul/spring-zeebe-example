@@ -75,6 +75,33 @@ public class ZeebeBaseTest {
         waitForIdleState(Duration.ofSeconds(1));
     }
 
+    public void throwErrorServiceTask(String jobType, int count) {
+        throwErrorServiceTask(jobType, count, Map.of());
+    }
+
+
+    public void throwErrorServiceTask(String jobType, int count, Map<String, String> variables) {
+        ActivateJobsResponse response = client.newActivateJobsCommand()
+                .jobType(jobType)
+                .maxJobsToActivate(count)
+                .send()
+                .join();
+
+        int activatedJobCount = response.getJobs().size();
+        if (activatedJobCount < count) {
+            Assertions.fail("Unable to activate %d jobs, because only %d were activated.".formatted(count, activatedJobCount));
+        }
+
+        for (int i = 0; i < count; i++) {
+            ActivatedJob job = response.getJobs().get(i);
+            client.newThrowErrorCommand(job.getKey())
+                    .errorCode(RiskError.RISK_LEVEL_ERROR.getCode())
+                    .variables(variables)
+                    .send()
+                    .join();
+        }
+        waitForIdleState(Duration.ofSeconds(1));
+    }
 
     /**
      * These two methods deal with the asynchronous nature of the engine. It is recommended

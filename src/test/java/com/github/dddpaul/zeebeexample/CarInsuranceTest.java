@@ -48,4 +48,19 @@ public class CarInsuranceTest extends ZeebeBaseTest {
                 .hasPassedElement("Task_RejectApplication")
                 .isCompleted();
     }
+
+    @Test
+    void shouldRejectApplicationWhenRiskLevelIsUndefined() {
+        // given
+        ProcessInstanceEvent flow = createProcessInstance(PROCESS_ID, Map.of());
+
+        // when
+        throwErrorServiceTask("risk-level", 1);
+        completeServiceTask("reject-app", 1);
+
+        // then
+        BpmnAssert.assertThat(flow)
+                .hasPassedElement("Task_RejectApplication")
+                .isCompleted();
+    }
 }
