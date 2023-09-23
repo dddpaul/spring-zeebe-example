@@ -11,7 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@Deployment(resources = "classpath*:*.bpmn")
+@Deployment(resources = {"classpath*:*.bpmn", "classpath*:*.dmn"})
 public class ZeebeExampleApplication implements ApplicationRunner {
 
     @Autowired(required = false)
