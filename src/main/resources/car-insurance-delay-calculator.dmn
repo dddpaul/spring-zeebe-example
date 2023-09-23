@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="Definitions_0p61lmx" name="Delay calculator" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.14.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+  <decision id="delayCalculator" name="Delay calculator">
+    <informationRequirement id="InformationRequirement_1v1ceqi">
+      <requiredInput href="#InputData_1dkbpp3" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_0pms3yt" hitPolicy="PRIORITY">
+      <input id="Input_1">
+        <inputExpression id="InputExpression_1" typeRef="number">
+          <text>retries</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" typeRef="string" />
+      <rule id="DecisionRule_0w92vng">
+        <inputEntry id="UnaryTests_1r0l2yx">
+          <text>&lt;= 1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1kmt7sb">
+          <text>"PT1M"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0pfvdzn">
+        <inputEntry id="UnaryTests_04xgm82">
+          <text>2</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1pj2qme">
+          <text>"PT2M"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0se4xr0">
+        <inputEntry id="UnaryTests_1m5opp2">
+          <text>3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1m0nn46">
+          <text>"PT3M"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0wtt2tv">
+        <inputEntry id="UnaryTests_10zg7n8">
+          <text>4</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1dobi1a">
+          <text>"PT4M"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0mmuqeo">
+        <inputEntry id="UnaryTests_1vr2v5k">
+          <text>5</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_041qf25">
+          <text>"PT5M"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1df6554">
+        <inputEntry id="UnaryTests_1k07ztc">
+          <text>&gt;5</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1u8vnyo">
+          <text>"PT10M"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <inputData id="InputData_1dkbpp3" name="retries" />
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="delayCalculator">
+        <dc:Bounds height="80" width="180" x="160" y="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1lg6jgn" dmnElementRef="InputData_1dkbpp3">
+        <dc:Bounds height="45" width="125" x="187" y="207" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0u9dy1d" dmnElementRef="InformationRequirement_1v1ceqi">
+        <di:waypoint x="250" y="207" />
+        <di:waypoint x="250" y="180" />
+        <di:waypoint x="250" y="160" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
