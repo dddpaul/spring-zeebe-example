@@ -22,8 +22,7 @@ public class CarInsuranceTest extends ZeebeBaseTest {
     @Test
     void shouldApproveApplicationWhenRiskLevelIsGreen() {
         // given
-        Map<String, String> variables = Map.of("chance", "0");
-        ProcessInstanceEvent flow = createProcessInstance(PROCESS_ID, variables);
+        ProcessInstanceEvent flow = createProcessInstance(PROCESS_ID, Map.of());
 
         // when
         completeServiceTask("risk-level", 1, Map.of("riskLevel", "green"));
@@ -32,6 +31,21 @@ public class CarInsuranceTest extends ZeebeBaseTest {
         // then
         BpmnAssert.assertThat(flow)
                 .hasPassedElement("Task_ApproveApplication")
+                .isCompleted();
+    }
+
+    @Test
+    void shouldRejectApplicationWhenRiskLevelIsRed() {
+        // given
+        ProcessInstanceEvent flow = createProcessInstance(PROCESS_ID, Map.of());
+
+        // when
+        completeServiceTask("risk-level", 1, Map.of("riskLevel", "red"));
+        completeServiceTask("reject-app", 1);
+
+        // then
+        BpmnAssert.assertThat(flow)
+                .hasPassedElement("Task_RejectApplication")
                 .isCompleted();
     }
 }
