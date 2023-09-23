@@ -3,10 +3,7 @@ package com.github.dddpaul.zeebeexample;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.command.DeployResourceCommandStep1;
-import io.camunda.zeebe.client.api.response.ActivateJobsResponse;
-import io.camunda.zeebe.client.api.response.ActivatedJob;
-import io.camunda.zeebe.client.api.response.DeploymentEvent;
-import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
+import io.camunda.zeebe.client.api.response.*;
 import io.camunda.zeebe.process.test.api.ZeebeTestEngine;
 import io.camunda.zeebe.process.test.extension.ZeebeProcessTest;
 import lombok.SneakyThrows;
@@ -101,6 +98,23 @@ public class ZeebeBaseTest {
                     .join();
         }
         waitForIdleState(Duration.ofSeconds(1));
+    }
+
+    public void evaluateDecision(String decisionId, int count) {
+        evaluateDecision(decisionId, count, Map.of());
+    }
+
+    public void evaluateDecision(String decisionId, int count, Map<String, String> variables) {
+        EvaluateDecisionResponse response = client.newEvaluateDecisionCommand()
+                .decisionId(decisionId)
+                .variables(variables)
+                .send()
+                .join();
+
+        int decisions = response.getEvaluatedDecisions().size();
+        if (decisions < count) {
+            Assertions.fail("Unable to evaluate %d decisions, because only %d were evaluated.".formatted(count, decisions));
+        }
     }
 
     /**
