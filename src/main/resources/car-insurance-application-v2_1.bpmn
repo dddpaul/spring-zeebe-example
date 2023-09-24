@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.12.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0" camunda:diagramRelationId="4fad734f-e576-43e4-b9fb-ca2a29ce6766">
+  <bpmn:process id="CarInsuranceApplicationProcessV2_1" name="Car Insurance Application V2_1" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_InsuranceApplicationReceived" name="Insurance Application Received">
+      <bpmn:outgoing>Flow_0vbcvpl</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0vbcvpl" sourceRef="StartEvent_InsuranceApplicationReceived" targetRef="Activity_0hkzyqu" />
+    <bpmn:exclusiveGateway id="Gateway_RiskLevel" name="What is the Risk Level?">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_0uljdjn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0d381jo</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ipz51a</bpmn:outgoing>
+      <bpmn:outgoing>Flow_15511xb</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0d381jo" name="Green" sourceRef="Gateway_RiskLevel" targetRef="Gateway_1oonlek">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=riskLevel = "green"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1ipz51a" name="Yellow" sourceRef="Gateway_RiskLevel" targetRef="Task_DecideApplication">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=riskLevel = "yellow"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_15511xb" name="Red" sourceRef="Gateway_RiskLevel" targetRef="Gateway_1frf9zp">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=riskLevel = "red"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_1oonlek">
+      <bpmn:incoming>Flow_0d381jo</bpmn:incoming>
+      <bpmn:incoming>Flow_08pbke2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nv2kj0</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_ApplicationAccepted" name="Application accepted?">
+      <bpmn:incoming>Flow_0ri19h6</bpmn:incoming>
+      <bpmn:outgoing>Flow_08pbke2</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1nseukt</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0ri19h6" sourceRef="Task_DecideApplication" targetRef="Gateway_ApplicationAccepted" />
+    <bpmn:sequenceFlow id="Flow_08pbke2" name="Yes" sourceRef="Gateway_ApplicationAccepted" targetRef="Gateway_1oonlek">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved = "yes"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_1frf9zp">
+      <bpmn:incoming>Flow_1nseukt</bpmn:incoming>
+      <bpmn:incoming>Flow_15511xb</bpmn:incoming>
+      <bpmn:incoming>Flow_1dwvhij</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qwmj19</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1nseukt" name="No" sourceRef="Gateway_ApplicationAccepted" targetRef="Gateway_1frf9zp">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved = "no"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0nv2kj0" sourceRef="Gateway_1oonlek" targetRef="Task_ApproveApplication" />
+    <bpmn:endEvent id="EndEvent_ApplicationApproved" name="Application Approved">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=true" target="approved" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0tirnwp</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0tirnwp" sourceRef="Task_ApproveApplication" targetRef="EndEvent_ApplicationApproved" />
+    <bpmn:sequenceFlow id="Flow_1qwmj19" sourceRef="Gateway_1frf9zp" targetRef="Task_RejectApplication" />
+    <bpmn:endEvent id="EndEvent_ApplicationRejected" name="Application Rejected">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=false" target="approved" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0psmuqi</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0psmuqi" sourceRef="Task_RejectApplication" targetRef="EndEvent_ApplicationRejected" />
+    <bpmn:sequenceFlow id="Flow_0tnsif7" sourceRef="Timer_Escalate2Days" targetRef="Task_SendReminder" />
+    <bpmn:endEvent id="EndEvent_ReminderSent" name="Reminder Sent">
+      <bpmn:incoming>Flow_1r7lrdz</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1r7lrdz" sourceRef="Task_SendReminder" targetRef="EndEvent_ReminderSent" />
+    <bpmn:userTask id="Task_DecideApplication" name="Decide on Application">
+      <bpmn:incoming>Flow_1ipz51a</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ri19h6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="Task_SendReminder" name="Send Reminder">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="send-reminder" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0tnsif7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1r7lrdz</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:serviceTask id="Task_ApproveApplication" name="Approve Application">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="approve-app" retries="1" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0nv2kj0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tirnwp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_RejectApplication" name="Reject Application">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="reject-app" retries="1" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1qwmj19</bpmn:incoming>
+      <bpmn:outgoing>Flow_0psmuqi</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Timer_Escalate2Days" name="2 Days" cancelActivity="false" attachedToRef="Task_DecideApplication">
+      <bpmn:outgoing>Flow_0tnsif7</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0nv8aiu">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P2D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:callActivity id="Activity_0hkzyqu" name="Determine Risk Level Loop">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="CarInsuranceRiskLevelLoop" propagateAllChildVariables="true" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=1" target="retries" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0vbcvpl</bpmn:incoming>
+      <bpmn:outgoing>Flow_0uljdjn</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_0uljdjn" sourceRef="Activity_0hkzyqu" targetRef="Gateway_RiskLevel" />
+    <bpmn:sequenceFlow id="Flow_1dwvhij" sourceRef="Event_0q1ja7a" targetRef="Gateway_1frf9zp" />
+    <bpmn:boundaryEvent id="Event_0q1ja7a" name="20 minutes" attachedToRef="Activity_0hkzyqu">
+      <bpmn:outgoing>Flow_1dwvhij</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0u4y6p0">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20M</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="CarInsuranceApplicationProcessV2_1">
+      <bpmndi:BPMNShape id="Gateway_02v0qps_di" bpmnElement="Gateway_RiskLevel" isMarkerVisible="true">
+        <dc:Bounds x="485" y="115" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="471" y="85" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1oonlek_di" bpmnElement="Gateway_1oonlek" isMarkerVisible="true">
+        <dc:Bounds x="915" y="115" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_11cxa2r_di" bpmnElement="Gateway_ApplicationAccepted" isMarkerVisible="true">
+        <dc:Bounds x="915" y="295" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="973" y="306" width="54" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1frf9zp_di" bpmnElement="Gateway_1frf9zp" isMarkerVisible="true">
+        <dc:Bounds x="915" y="435" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ov6ukr_di" bpmnElement="EndEvent_ApplicationApproved">
+        <dc:Bounds x="1172" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1163" y="165" width="54" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0wkzsp2_di" bpmnElement="EndEvent_ApplicationRejected">
+        <dc:Bounds x="1172" y="442" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1163" y="485" width="54" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0394rty_di" bpmnElement="EndEvent_ReminderSent">
+        <dc:Bounds x="872" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="853" y="245" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1hnxzz9_di" bpmnElement="Task_DecideApplication">
+        <dc:Bounds x="610" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0x49e1a_di" bpmnElement="Task_SendReminder">
+        <dc:Bounds x="720" y="180" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ax1ss0_di" bpmnElement="Task_ApproveApplication" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1020" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0v7o2ud_di" bpmnElement="Task_RejectApplication" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1020" y="420" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_InsuranceApplicationReceived">
+        <dc:Bounds x="162" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="154" y="165" width="54" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13vahi2_di" bpmnElement="Activity_0hkzyqu">
+        <dc:Bounds x="290" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ds7ah3_di" bpmnElement="Timer_Escalate2Days">
+        <dc:Bounds x="642" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="612" y="243" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1w9o6ma_di" bpmnElement="Event_0q1ja7a">
+        <dc:Bounds x="372" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="402" y="203" width="55" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0d381jo_di" bpmnElement="Flow_0d381jo">
+        <di:waypoint x="535" y="140" />
+        <di:waypoint x="915" y="140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="552" y="122" width="31" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ipz51a_di" bpmnElement="Flow_1ipz51a">
+        <di:waypoint x="510" y="165" />
+        <di:waypoint x="510" y="320" />
+        <di:waypoint x="610" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="548" y="303" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15511xb_di" bpmnElement="Flow_15511xb">
+        <di:waypoint x="510" y="165" />
+        <di:waypoint x="510" y="460" />
+        <di:waypoint x="915" y="460" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="556" y="443" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08pbke2_di" bpmnElement="Flow_08pbke2">
+        <di:waypoint x="940" y="295" />
+        <di:waypoint x="940" y="165" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="946" y="227" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nv2kj0_di" bpmnElement="Flow_0nv2kj0">
+        <di:waypoint x="965" y="140" />
+        <di:waypoint x="1020" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ri19h6_di" bpmnElement="Flow_0ri19h6">
+        <di:waypoint x="710" y="320" />
+        <di:waypoint x="915" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nseukt_di" bpmnElement="Flow_1nseukt">
+        <di:waypoint x="940" y="345" />
+        <di:waypoint x="940" y="435" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="948" y="387" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qwmj19_di" bpmnElement="Flow_1qwmj19">
+        <di:waypoint x="965" y="460" />
+        <di:waypoint x="1020" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tirnwp_di" bpmnElement="Flow_0tirnwp">
+        <di:waypoint x="1120" y="140" />
+        <di:waypoint x="1172" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0psmuqi_di" bpmnElement="Flow_0psmuqi">
+        <di:waypoint x="1120" y="460" />
+        <di:waypoint x="1172" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r7lrdz_di" bpmnElement="Flow_1r7lrdz">
+        <di:waypoint x="820" y="220" />
+        <di:waypoint x="872" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tnsif7_di" bpmnElement="Flow_0tnsif7">
+        <di:waypoint x="660" y="262" />
+        <di:waypoint x="660" y="220" />
+        <di:waypoint x="720" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vbcvpl_di" bpmnElement="Flow_0vbcvpl">
+        <di:waypoint x="198" y="140" />
+        <di:waypoint x="290" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uljdjn_di" bpmnElement="Flow_0uljdjn">
+        <di:waypoint x="390" y="140" />
+        <di:waypoint x="485" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dwvhij_di" bpmnElement="Flow_1dwvhij">
+        <di:waypoint x="390" y="198" />
+        <di:waypoint x="390" y="460" />
+        <di:waypoint x="915" y="460" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
