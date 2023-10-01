@@ -46,6 +46,18 @@ public class ZeebeBaseTest {
                 .join();
     }
 
+    public PublishMessageResponse sendMessage(String messageName, String correlationKey, Map<String, String> variables) {
+        PublishMessageResponse response = client
+                        .newPublishMessageCommand()
+                        .messageName(messageName)
+                        .correlationKey(correlationKey)
+                        .variables(variables)
+                        .send()
+                        .join();
+        waitForIdleState(Duration.ofSeconds(1));
+        return response;
+    }
+
     public void completeServiceTask(String jobType, int count) {
         completeServiceTask(jobType, count, Map.of());
     }
