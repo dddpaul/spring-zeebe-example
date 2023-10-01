@@ -17,6 +17,8 @@ public class ProcessStarterConfiguration {
 
     private String process;
 
+    private Map<String, String> messages;
+
     private  boolean random;
 
     private Map<String, String> variables;

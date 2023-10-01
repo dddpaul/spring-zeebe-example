@@ -36,6 +36,8 @@ app:
     threads: 1
     # BPMN process id
     process: CarInsuranceApplicationProcess
+    messages:
+      start: application-created
     random: false
     variables:
       chance: 0
