@@ -1,9 +1,7 @@
 package com.github.dddpaul.zeebeexample.starter;
 
 import com.github.dddpaul.zeebeexample.starter.commands.CreateInstanceCommand;
-import com.github.dddpaul.zeebeexample.starter.commands.SendStartMessageCommand;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
-import io.camunda.zeebe.client.api.response.PublishMessageResponse;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
 import org.slf4j.Logger;
@@ -28,7 +26,7 @@ public class ProcessStarter {
     private ProcessStarterConfiguration config;
 
     @Autowired
-    private SendStartMessageCommand command;
+    private CreateInstanceCommand command;
 
     public void startParallelProcesses() {
         ExecutorService pool = Executors.newFixedThreadPool(config.getThreads());
@@ -53,8 +51,8 @@ public class ProcessStarter {
         return () -> {
             try (bar) {
                 for (long i = 0; i < count; i++) {
-                    PublishMessageResponse response = command.execute();
-                    bar.setExtraMessage(String.format(" %s %17d", response.getTenantId(), response.getMessageKey()));
+                    ProcessInstanceEvent event = command.execute();
+                    bar.setExtraMessage(String.format(" %s %17d", event.getBpmnProcessId(), event.getProcessInstanceKey()));
                     bar.step();
                 }
             } catch (Exception e) {
