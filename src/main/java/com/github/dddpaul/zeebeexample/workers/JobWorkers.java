@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Map;
 
 import static com.github.dddpaul.zeebeexample.RiskError.RISK_LEVEL_ERROR;
@@ -19,6 +20,14 @@ import static com.github.dddpaul.zeebeexample.RiskError.RISK_LEVEL_ERROR;
 public class JobWorkers {
 
     private static final Logger log = LoggerFactory.getLogger(JobWorkers.class);
+
+    @JobWorker(type = "loop-settings")
+    public Map<String, Object> loopSettings(final ActivatedJob job) {
+        int retries = 1;
+        int timeout = 20;
+        log.info("Application {} loop is configured with retries = {} and timeout = {} minutes", job.getProcessInstanceKey(), retries, timeout);
+        return Map.of("retries", retries, "timeout", Duration.ofMinutes(timeout).toString());
+    }
 
     @JobWorker(type = "risk-level")
     public Map<String, Object> riskLevel(final ActivatedJob job, @Variable int chance) {
