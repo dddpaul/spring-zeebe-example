@@ -29,22 +29,23 @@ public class ProcessStarter {
     private CreateInstanceCommand command;
 
     public void startParallelProcesses() {
-        ExecutorService pool = Executors.newFixedThreadPool(config.getThreads());
+        try (ExecutorService pool = Executors.newFixedThreadPool(config.getThreads())) {
 
-        List<ProgressBar> bars = IntStream.range(0, config.getThreads())
-                .mapToObj(i -> new ProgressBarBuilder()
-                        .setTaskName(String.format("%10s", "Thread-" + i))
-                        .setInitialMax(config.getCount())
-                        .showSpeed()
-                        .build())
-                .toList();
+            List<ProgressBar> bars = IntStream.range(0, config.getThreads())
+                    .mapToObj(i -> new ProgressBarBuilder()
+                            .setTaskName(String.format("%10s", "Thread-" + i))
+                            .setInitialMax(config.getCount())
+                            .showSpeed()
+                            .build())
+                    .toList();
 
-        CompletableFuture<?>[] futures = bars.stream()
-                .map(bar -> CompletableFuture.runAsync(startProcesses(bar, config.getCount()), pool))
-                .toArray(CompletableFuture[]::new);
+            CompletableFuture<?>[] futures = bars.stream()
+                    .map(bar -> CompletableFuture.runAsync(startProcesses(bar, config.getCount()), pool))
+                    .toArray(CompletableFuture[]::new);
 
-        CompletableFuture.allOf(futures).join();
-        pool.shutdown();
+            CompletableFuture.allOf(futures).join();
+            pool.shutdown();
+        }
     }
 
     private Runnable startProcesses(ProgressBar bar, long count) {
