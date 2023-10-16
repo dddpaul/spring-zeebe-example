@@ -3,6 +3,8 @@ package com.github.dddpaul.zeebeexample;
 import io.camunda.zeebe.spring.client.exception.ZeebeBpmnError;
 import lombok.Getter;
 
+import java.util.Map;
+
 @Getter
 public enum RiskError {
 
@@ -25,6 +27,6 @@ public enum RiskError {
     }
 
     public static ZeebeBpmnError create(RiskError e, Object... args) {
-        return new ZeebeBpmnError(e.getCode(), e.getMessage().formatted(args));
+        return new ZeebeBpmnError(e.getCode(), e.getMessage().formatted(args), Map.of());
     }
 }
