@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dddpaul.zeebeexample.RiskLevel;
 import com.github.dddpaul.zeebeexample.starter.ProcessStarterConfiguration;
 import io.camunda.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.api.command.ClientStatusException;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
 import io.grpc.Status;
-import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class CreateInstanceCommand {
             variables.put("chance", String.valueOf(random.nextInt(RiskLevel.values().length + 1)));
         }
         ObjectMapper objectMapper = new ObjectMapper();
-        for (int retries = 1; retries <= 3; retries++) {
+        for (int retries = 1; retries <= 10; retries++) {
             try {
                 ProcessInstanceEvent event = client
                         .newCreateInstanceCommand()
@@ -45,8 +45,9 @@ public class CreateInstanceCommand {
                         .join();
                 log.debug("Application {} sent with chance = {}", event.getProcessInstanceKey(), variables.get("chance"));
                 return event;
-            } catch (StatusRuntimeException e) {
-                if (Status.DEADLINE_EXCEEDED.equals(e.getStatus())) {
+            } catch (ClientStatusException e) {
+                // Deadline is for handling broker flapping, Internal is for handling rebalance
+                if (Status.DEADLINE_EXCEEDED.equals(e.getStatus()) || (Status.INTERNAL.equals(e.getStatus()))) {
                     Thread.sleep(1000);
                 }
             }
