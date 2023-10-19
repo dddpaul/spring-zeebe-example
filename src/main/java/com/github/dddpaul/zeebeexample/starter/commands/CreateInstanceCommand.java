@@ -6,6 +6,8 @@ import com.github.dddpaul.zeebeexample.RiskLevel;
 import com.github.dddpaul.zeebeexample.starter.ProcessStarterConfiguration;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,21 +27,30 @@ public class CreateInstanceCommand {
     @Autowired
     private ZeebeClient client;
 
-    public ProcessInstanceEvent execute() throws JsonProcessingException {
+    public ProcessInstanceEvent execute() throws JsonProcessingException, InterruptedException {
         Map<String, String> variables = config.getVariables();
         if (config.isRandom()) {
             Random random = new Random();
             variables.put("chance", String.valueOf(random.nextInt(RiskLevel.values().length + 1)));
         }
         ObjectMapper objectMapper = new ObjectMapper();
-        ProcessInstanceEvent event = client
-                .newCreateInstanceCommand()
-                .bpmnProcessId(config.getProcess())
-                .latestVersion()
-                .variables(objectMapper.writeValueAsString(variables))
-                .send()
-                .join();
-        log.debug("Application {} sent with chance = {}", event.getProcessInstanceKey(), variables.get("chance"));
-        return event;
+        for (int retries = 1; retries <= 3; retries++) {
+            try {
+                ProcessInstanceEvent event = client
+                        .newCreateInstanceCommand()
+                        .bpmnProcessId(config.getProcess())
+                        .latestVersion()
+                        .variables(objectMapper.writeValueAsString(variables))
+                        .send()
+                        .join();
+                log.debug("Application {} sent with chance = {}", event.getProcessInstanceKey(), variables.get("chance"));
+                return event;
+            } catch (StatusRuntimeException e) {
+                if (Status.DEADLINE_EXCEEDED.equals(e.getStatus())) {
+                    Thread.sleep(1000);
+                }
+            }
+        }
+        throw new RuntimeException("Process create error: All retries are failed");
     }
 }
