@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
 @Component
@@ -27,6 +28,8 @@ public class ProcessStarter {
 
     @Autowired
     private CreateInstanceCommand command;
+
+    private final AtomicLong processCounter = new AtomicLong(0);
 
     public void startParallelProcesses() {
         try (ExecutorService pool = Executors.newFixedThreadPool(config.getThreads())) {
@@ -52,7 +55,7 @@ public class ProcessStarter {
         return () -> {
             try (bar) {
                 for (long i = 0; i < count; i++) {
-                    ProcessInstanceEvent event = command.execute();
+                    ProcessInstanceEvent event = command.execute(processCounter.incrementAndGet());
                     bar.setExtraMessage(String.format(" %s %17d", event.getBpmnProcessId(), event.getProcessInstanceKey()));
                     bar.step();
                 }

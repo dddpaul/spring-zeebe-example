@@ -27,23 +27,26 @@ public class CreateInstanceCommand {
     @Autowired
     private ZeebeClient client;
 
-    public ProcessInstanceEvent execute() throws JsonProcessingException, InterruptedException {
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    public ProcessInstanceEvent execute(long counter) throws JsonProcessingException, InterruptedException {
         Map<String, String> variables = config.getVariables();
+        variables.put("count", String.valueOf(counter));
         if (config.isRandom()) {
             Random random = new Random();
             variables.put("chance", String.valueOf(random.nextInt(RiskLevel.values().length + 1)));
         }
-        ObjectMapper objectMapper = new ObjectMapper();
+        String s = mapper.writeValueAsString(variables);
         for (int retries = 1; retries <= 10; retries++) {
             try {
                 ProcessInstanceEvent event = client
                         .newCreateInstanceCommand()
                         .bpmnProcessId(config.getProcess())
                         .latestVersion()
-                        .variables(objectMapper.writeValueAsString(variables))
+                        .variables(s)
                         .send()
                         .join();
-                log.debug("Application {} sent with chance = {}", event.getProcessInstanceKey(), variables.get("chance"));
+                log.debug("Application {} sent with variables: {}", event.getProcessInstanceKey(), s);
                 return event;
             } catch (ClientStatusException e) {
                 // Deadline is for handling broker flapping, Internal is for handling rebalance
