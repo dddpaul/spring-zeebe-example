@@ -21,6 +21,7 @@ public class JobWorkers {
 
     private static final Logger log = LoggerFactory.getLogger(JobWorkers.class);
 
+
     @JobWorker(type = "loop-settings")
     public Map<String, Object> loopSettings(final ActivatedJob job) {
         int retries = 1;

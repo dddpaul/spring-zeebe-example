@@ -49,6 +49,9 @@ public class ProcessStarter {
             CompletableFuture.allOf(futures).join();
             pool.shutdown();
         }
+        if (processCounter.get() != config.getCount()) {
+            throw new RuntimeException("Actual processes created: %d, expected: %d".formatted(processCounter.get(), config.getCount()));
+        }
     }
 
     private Runnable startProcesses(ProgressBar bar, long count) {
