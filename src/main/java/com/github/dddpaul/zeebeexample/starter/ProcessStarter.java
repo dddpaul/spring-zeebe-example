@@ -1,5 +1,6 @@
 package com.github.dddpaul.zeebeexample.starter;
 
+import com.github.dddpaul.zeebeexample.actuator.ApplicationStats;
 import com.github.dddpaul.zeebeexample.starter.commands.CreateInstanceCommand;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
 import me.tongfei.progressbar.ProgressBar;
@@ -28,6 +29,9 @@ public class ProcessStarter {
 
     @Autowired
     private CreateInstanceCommand command;
+
+    @Autowired
+    private ApplicationStats stats;
 
     private final AtomicLong processCounter = new AtomicLong(0);
 
@@ -59,6 +63,7 @@ public class ProcessStarter {
             try (bar) {
                 for (long i = 0; i < count; i++) {
                     ProcessInstanceEvent event = command.execute(processCounter.incrementAndGet());
+                    stats.incrementCreated();
                     bar.setExtraMessage(String.format(" %s %17d", event.getBpmnProcessId(), event.getProcessInstanceKey()));
                     bar.step();
                 }
