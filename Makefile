@@ -8,7 +8,7 @@ build:
 # Plain process without subprocess, dmn, timer and delay
 starter:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
-	--app.starter.enabled=true --spring.main.web-application-type=none \
+	--app.starter.enabled=true \
 	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
 
 # Process with subprocess, dmn, timer and delay
