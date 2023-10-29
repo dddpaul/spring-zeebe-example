@@ -117,7 +117,6 @@ tmux select-pane -D
 # Run stats and prepare for starter command
 tmux split-window -h
 tmux resize-pane -R 40
-tmux select-pane -R
 tmux send-keys -t $session 'watch -n1 "curl -sS localhost:8080/actuator/stats | jq ."' Enter
 tmux select-pane -L
 
