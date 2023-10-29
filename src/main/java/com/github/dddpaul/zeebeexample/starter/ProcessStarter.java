@@ -53,7 +53,7 @@ public class ProcessStarter {
             CompletableFuture.allOf(futures).join();
             pool.shutdown();
         }
-        if (processCounter.get() != config.getCount()) {
+        if (processCounter.get() != config.getCount() * config.getThreads()) {
             throw new RuntimeException("Actual processes created: %d, expected: %d".formatted(processCounter.get(), config.getCount()));
         }
     }
