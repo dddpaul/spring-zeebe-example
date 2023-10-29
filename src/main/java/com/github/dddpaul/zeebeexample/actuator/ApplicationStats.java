@@ -23,4 +23,11 @@ public class ApplicationStats {
     public void incrementRejected() {
         rejected.incrementAndGet();
     }
+
+    public void reset() {
+        created.set(0);
+        approved.set(0);
+        rejected.set(0);
+    }
+
 }
