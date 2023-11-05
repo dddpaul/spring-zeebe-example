@@ -10,10 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static com.github.dddpaul.zeebeexample.RiskError.RISK_LEVEL_ERROR;
 
@@ -22,6 +26,11 @@ import static com.github.dddpaul.zeebeexample.RiskError.RISK_LEVEL_ERROR;
 public class JobWorkers {
 
     private static final Logger log = LoggerFactory.getLogger(JobWorkers.class);
+
+    @Bean
+    public ScheduledExecutorService scheduledExecutorService() {
+        return Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory());
+    }
 
     @Autowired
     private ApplicationStats stats;
