@@ -22,7 +22,8 @@ zeebe:
         # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobPollInterval, default = 100ms
         poll-interval: 100ms
         zeebe:
-    default-job-worker-stream-enabled: true
+    # Experimental job streaming feature, see https://github.com/camunda-community-hub/spring-zeebe/pull/490
+    default-job-worker-stream-enabled: false
 
 # Configuration for the application
 app:
