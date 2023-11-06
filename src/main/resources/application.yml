@@ -28,6 +28,8 @@ app:
     enabled: false
     progress-bar:
       enabled: false
+    virtual-thread-pool:
+      enabled: false
   starter:
     enabled: false
     # Maximum number of scheduled tasks

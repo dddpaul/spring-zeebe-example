@@ -10,6 +10,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
 import java.util.concurrent.Executors;
@@ -20,6 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class ZeebeExampleApplication implements ApplicationRunner {
 
     @Bean
+    @ConditionalOnProperty(value = "app.worker.virtual-thread-pool.enabled", havingValue = "true")
     public ZeebeClientExecutorService zeebeClientExecutorService() {
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory());
         return new ZeebeClientExecutorService(pool);

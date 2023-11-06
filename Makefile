@@ -70,7 +70,15 @@ starter-v5:
 worker:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar --app.worker.enabled=true
 
+worker-loom:
+	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar --app.worker.enabled=true --app.worker.virtual-thread-pool.enabled=true
+
 worker-bar:
 	@LOGGING_LEVEL_COM_GITHUB_DDDPAUL_ZEEBEEXAMPLE_WORKERS=OFF \
 	java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
 	--app.worker.enabled=true --app.worker.progress-bar.enabled=true
+
+worker-bar-loom:
+	@LOGGING_LEVEL_COM_GITHUB_DDDPAUL_ZEEBEEXAMPLE_WORKERS=OFF \
+	java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	--app.worker.enabled=true --app.worker.virtual-thread-pool.enabled=true --app.worker.progress-bar.enabled=true
