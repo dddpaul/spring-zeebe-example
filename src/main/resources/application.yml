@@ -21,6 +21,8 @@ zeebe:
         # Poll interval for job activation requests
         # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobPollInterval, default = 100ms
         poll-interval: 100ms
+        zeebe:
+    default-job-worker-stream-enabled: true
 
 # Configuration for the application
 app:
