@@ -20,10 +20,13 @@ import java.util.concurrent.ScheduledExecutorService;
 @Deployment(resources = {"classpath*:*.bpmn", "classpath*:*.dmn"})
 public class ZeebeExampleApplication implements ApplicationRunner {
 
+    @Value("${app.worker.virtual-thread-pool.size}")
+    private int virtualThreadPoolSize;
+
     @Bean
     @ConditionalOnProperty(value = "app.worker.virtual-thread-pool.enabled", havingValue = "true")
     public ZeebeClientExecutorService zeebeClientExecutorService() {
-        ScheduledExecutorService pool = Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory());
+        ScheduledExecutorService pool = Executors.newScheduledThreadPool(virtualThreadPoolSize, Thread.ofVirtual().factory());
         return new ZeebeClientExecutorService(pool);
     }
     

@@ -33,6 +33,7 @@ app:
       enabled: false
     virtual-thread-pool:
       enabled: false
+      size: 64
   starter:
     enabled: false
     # Maximum number of scheduled tasks
