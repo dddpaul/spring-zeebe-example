@@ -6,20 +6,14 @@ import com.github.dddpaul.zeebeexample.actuator.ApplicationStats;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import io.camunda.zeebe.spring.client.annotation.Variable;
-import io.camunda.zeebe.spring.client.jobhandling.ZeebeClientExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import static com.github.dddpaul.zeebeexample.RiskError.RISK_LEVEL_ERROR;
 
@@ -28,12 +22,6 @@ import static com.github.dddpaul.zeebeexample.RiskError.RISK_LEVEL_ERROR;
 public class JobWorkers {
 
     private static final Logger log = LoggerFactory.getLogger(JobWorkers.class);
-
-    @Bean
-    public ZeebeClientExecutorService zeebeClientExecutorService() {
-        ScheduledExecutorService pool = Executors.newScheduledThreadPool(0, Thread.ofVirtual().factory());
-        return new ZeebeClientExecutorService(pool);
-    }
 
     @Autowired
     private ApplicationStats stats;
