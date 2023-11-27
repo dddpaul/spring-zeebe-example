@@ -163,10 +163,10 @@
         <bpmn:text>We will use information from application here</bpmn:text>
       </bpmn:textAnnotation>
     </bpmn:subProcess>
-    <bpmn:boundaryEvent id="Event_1ephuvk" name="20 minutes" attachedToRef="Loop_DetermineRiskLevel">
+    <bpmn:boundaryEvent id="Event_1ephuvk" name="10 minutes" attachedToRef="Loop_DetermineRiskLevel">
       <bpmn:outgoing>Flow_0c1b6d1</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_1nvn6gs">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20M</bpmn:timeDuration>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10M</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_0c1b6d1" sourceRef="Event_1ephuvk" targetRef="Gateway_1frf9zp" />
@@ -290,7 +290,7 @@
       <bpmndi:BPMNShape id="Event_0eegs8p_di" bpmnElement="Event_1ephuvk">
         <dc:Bounds x="472" y="362" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="513" y="393" width="54" height="14" />
+          <dc:Bounds x="513" y="393" width="55" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1ds7ah3_di" bpmnElement="Timer_Escalate2Days">
