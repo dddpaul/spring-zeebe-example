@@ -14,6 +14,7 @@ configurations {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -22,6 +23,7 @@ dependencies {
     implementation 'me.tongfei:progressbar:0.9.4'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'com.github.dddpaul.camunda:camunda-connector-example:0.1.0-SNAPSHOT'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
