@@ -193,8 +193,8 @@
     <bpmn:boundaryEvent id="Event_1c56wa7" name="HTTP error" attachedToRef="Activity_1r43sh9">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:output source="=1" target="retries" />
-          <zeebe:output source="=&#34;PT20S&#34;" target="timeout" />
+          <zeebe:output source="=1" target="loop_retries" />
+          <zeebe:output source="=20" target="loop_timeout" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_0d3thes</bpmn:outgoing>
