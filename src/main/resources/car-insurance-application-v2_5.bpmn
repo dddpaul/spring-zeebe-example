@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.17.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0" camunda:diagramRelationId="4fad734f-e576-43e4-b9fb-ca2a29ce6766">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.17.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.3.0" camunda:diagramRelationId="4fad734f-e576-43e4-b9fb-ca2a29ce6766">
   <bpmn:process id="CarInsuranceApplicationProcessV2_5" name="Car Insurance Application V2_5" isExecutable="true">
     <bpmn:startEvent id="StartEvent_InsuranceApplicationReceived" name="Insurance Application Received">
       <bpmn:outgoing>Flow_0vbcvpl</bpmn:outgoing>
@@ -104,8 +104,8 @@
     <bpmn:subProcess id="Loop_DetermineRiskLevel" name="Determine Risk Level Loop">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:input source="=params.retries" target="retries" />
-          <zeebe:input source="=params.timeout" target="timeout" />
+          <zeebe:input source="=params.body.retries" target="retries" />
+          <zeebe:input source="=&#34;PT&#34; + string(params.body.timeout) + &#34;M&#34;" target="timeout" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1a9z8ql</bpmn:incoming>
@@ -183,7 +183,6 @@
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
           <zeebe:header key="resultVariable" value="params" />
-          <zeebe:header key="resultExpression" value="={&#10;  retries: response.retries,&#10;  timeout: duration(response.timeout)&#10;}" />
           <zeebe:header key="errorExpression" value="=if error != null then&#10;  bpmnError(&#34;HTTP_ERROR&#34;, &#34;Some HTTP error&#34;)&#10;else&#10;  null" />
           <zeebe:header key="retryBackoff" value="PT0S" />
         </zeebe:taskHeaders>
