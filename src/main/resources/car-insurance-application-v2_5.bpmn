@@ -105,7 +105,7 @@
       <bpmn:extensionElements>
         <zeebe:ioMapping>
           <zeebe:input source="=loop_retries" target="retries" />
-          <zeebe:input source="=&#34;PT&#34; + string(loop_timeout) + &#34;M&#34;" target="timeout" />
+          <zeebe:input source="=loop_timeout" target="timeout" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1a9z8ql</bpmn:incoming>
@@ -194,7 +194,7 @@
       <bpmn:extensionElements>
         <zeebe:ioMapping>
           <zeebe:output source="=1" target="loop_retries" />
-          <zeebe:output source="=20" target="loop_timeout" />
+          <zeebe:output source="=&#34;PT20M&#34;" target="loop_timeout" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_0d3thes</bpmn:outgoing>

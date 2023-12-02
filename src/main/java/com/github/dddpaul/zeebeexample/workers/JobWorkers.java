@@ -37,13 +37,13 @@ public class JobWorkers {
     @Data
     static class LoopSettings {
         private int retries;
-        private int timeout;
+        private String timeout;
     }
 
     @JobWorker(type = "loop-settings")
     public Map<String, Object> loopSettings(final ActivatedJob job) {
         int retries = 1;
-        int timeout = 20;
+        String timeout = Duration.ofMinutes(20).toString();
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI("http://192.168.0.100:10000/params.json"))
@@ -57,8 +57,8 @@ public class JobWorkers {
         } catch (Exception e) {
             log.warn("Application {} warning: {}", job.getProcessInstanceKey(), e.getMessage());
         }
-        log.info("Application {} loop is configured with retries = {} and timeout = {} minutes", job.getProcessInstanceKey(), retries, timeout);
-        return Map.of("retries", retries, "timeout", Duration.ofMinutes(timeout).toString());
+        log.info("Application {} loop is configured with retries = {} and timeout = {}", job.getProcessInstanceKey(), retries, timeout);
+        return Map.of("retries", retries, "timeout", timeout);
     }
 
     @JobWorker(type = "risk-level")
