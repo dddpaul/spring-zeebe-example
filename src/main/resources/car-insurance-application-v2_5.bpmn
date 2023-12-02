@@ -104,8 +104,8 @@
     <bpmn:subProcess id="Loop_DetermineRiskLevel" name="Determine Risk Level Loop">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:input source="=retries" target="retries" />
-          <zeebe:input source="=timeout" target="timeout" />
+          <zeebe:input source="=params.retries" target="retries" />
+          <zeebe:input source="=params.timeout" target="timeout" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1a9z8ql</bpmn:incoming>
@@ -182,6 +182,7 @@
           <zeebe:input source="5" target="connectionTimeoutInSeconds" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="params" />
           <zeebe:header key="resultExpression" value="={&#10;  retries: response.retries,&#10;  timeout: duration(response.timeout)&#10;}" />
           <zeebe:header key="errorExpression" value="=if error != null then&#10;  bpmnError(&#34;HTTP_ERROR&#34;, &#34;Some HTTP error&#34;)&#10;else&#10;  null" />
           <zeebe:header key="retryBackoff" value="PT0S" />
