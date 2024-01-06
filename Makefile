@@ -62,7 +62,8 @@ starter-v3:
 
 # Process with custom connector
 starter-v4:
-	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	@CONNECTOR_MYCONNECTOR_TYPE=non-existent-type \
+	java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
 	--app.starter.enabled=true --spring.main.web-application-type=none \
 	--app.starter.process=CarInsuranceApplicationProcessV4 \
 	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
