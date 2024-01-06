@@ -25,6 +25,17 @@ zeebe:
     # Experimental job streaming feature, see https://github.com/camunda-community-hub/spring-zeebe/pull/490
     default-job-worker-stream-enabled: false
 
+# Disable inbound connectors (to skip Operate client configuration)
+camunda:
+  connector:
+    polling:
+      enabled: false
+
+# Configuration for Operate client
+operate:
+  client:
+    enabled: false
+
 # Configuration for the application
 app:
   worker:
