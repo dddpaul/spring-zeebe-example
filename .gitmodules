@@ -1,0 +1,3 @@
+[submodule "src/main/resources/.camunda/element-templates"]
+	path = src/main/resources/.camunda/element-templates
+	url = git@github.com:dddpaul/camunda-element-templates.git
