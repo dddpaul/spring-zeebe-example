@@ -62,7 +62,8 @@ starter-v3:
 
 # Process with custom connector
 starter-v4:
-	@CONNECTOR_MYCONNECTOR_TYPE=non-existent-type \
+	@CONNECTOR_TELEGRAM_OUTBOUND_TYPE=non-existent-type-1 \
+	CONNECTOR_MYCONNECTOR_TYPE=non-existent-type-2 \
 	java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
 	--app.starter.enabled=true --spring.main.web-application-type=none \
 	--app.starter.process=CarInsuranceApplicationProcessV4 \
