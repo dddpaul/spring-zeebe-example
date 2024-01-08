@@ -98,3 +98,9 @@ worker-bar-loom:
 	@LOGGING_LEVEL_COM_GITHUB_DDDPAUL_ZEEBEEXAMPLE_WORKERS=OFF \
 	java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
 	--app.worker.enabled=true --app.worker.virtual-thread-pool.enabled=true --app.worker.progress-bar.enabled=true
+
+http:
+	@cd node_http; ../node_modules/.bin/http-live -p 10000
+
+http-delay:
+	@cd node_http; ../node_modules/.bin/http-live -p 10000 -m 1000 -x 5000
