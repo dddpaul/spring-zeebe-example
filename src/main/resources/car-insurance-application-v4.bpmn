@@ -71,7 +71,7 @@
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_0vbcvpl" sourceRef="StartEvent_InsuranceApplicationReceived" targetRef="Task_DetermineRiskLevel" />
     <bpmn:sequenceFlow id="Flow_1dby29h" sourceRef="Task_DetermineRiskLevel" targetRef="Gateway_RiskLevel" />
-    <bpmn:sequenceFlow id="Flow_0d381jo" name="Green" sourceRef="Gateway_RiskLevel" targetRef="Activity_14yp08k">
+    <bpmn:sequenceFlow id="Flow_0d381jo" name="Green" sourceRef="Gateway_RiskLevel" targetRef="Activity_1mgw3t3">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=riskLevel = "green"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1ipz51a" name="Yellow" sourceRef="Gateway_RiskLevel" targetRef="Event_05xx7b3">
@@ -109,25 +109,7 @@
       <bpmn:outgoing>Flow_07z1ed5</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_07z1ed5" sourceRef="Activity_00hggeg" targetRef="Gateway_1frf9zp" />
-    <bpmn:serviceTask id="Activity_14yp08k" name="Send message to dddpaul" zeebe:modelerTemplate="com.github.dddpaul.camunda.connector.telegram.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB2aWV3Qm94PSIwIDAgNDggNDgiIHdpZHRoPSI5NnB4IiBoZWlnaHQ9Ijk2cHgiPjxsaW5lYXJHcmFkaWVudCBpZD0iQmlGN0QxNlVsQzBSWl9WcVhKSG5YYSIgeDE9IjkuODU4IiB4Mj0iMzguMTQyIiB5MT0iOS44NTgiIHkyPSIzOC4xNDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzM2JlZjAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwYTg1ZDkiLz48L2xpbmVhckdyYWRpZW50PjxwYXRoIGZpbGw9InVybCgjQmlGN0QxNlVsQzBSWl9WcVhKSG5YYSkiIGQ9Ik00NCwyNGMwLDExLjA0NS04Ljk1NSwyMC0yMCwyMFM0LDM1LjA0NSw0LDI0UzEyLjk1NSw0LDI0LDRTNDQsMTIuOTU1LDQ0LDI0eiIvPjxwYXRoIGQ9Ik0xMC4xMTksMjMuNDY2YzguMTU1LTMuNjk1LDE3LjczMy03LjcwNCwxOS4yMDgtOC4yODRjMy4yNTItMS4yNzksNC42NywwLjAyOCw0LjQ0OCwyLjExMwljLTAuMjczLDIuNTU1LTEuNTY3LDkuOTktMi4zNjMsMTUuMzE3Yy0wLjQ2NiwzLjExNy0yLjE1NCw0LjA3Mi00LjA1OSwyLjg2M2MtMS40NDUtMC45MTctNi40MTMtNC4xNy03LjcyLTUuMjgyCWMtMC44OTEtMC43NTgtMS41MTItMS42MDgtMC44OC0yLjQ3NGMwLjE4NS0wLjI1MywwLjY1OC0wLjc2MywwLjkyMS0xLjAxN2MxLjMxOS0xLjI3OCwxLjE0MS0xLjU1My0wLjQ1NC0wLjQxMgljLTAuMTksMC4xMzYtMS4yOTIsMC45MzUtMS43NDUsMS4yMzdjLTEuMTEsMC43NC0yLjEzMSwwLjc4LTMuODYyLDAuMTkyYy0xLjQxNi0wLjQ4MS0yLjc3Ni0wLjg1Mi0zLjYzNC0xLjIyMwlDOC43OTQsMjUuOTgzLDguMzQsMjQuMjcyLDEwLjExOSwyMy40NjZ6IiBvcGFjaXR5PSIuMDUiLz48cGF0aCBkPSJNMTAuODM2LDIzLjU5MWM3LjU3Mi0zLjM4NSwxNi44ODQtNy4yNjQsMTguMjQ2LTcuODEzYzMuMjY0LTEuMzE4LDQuNDY1LTAuNTM2LDQuMTE0LDIuMDExCWMtMC4zMjYsMi4zNTgtMS40ODMsOS42NTQtMi4yOTQsMTQuNTQ1Yy0wLjQ3OCwyLjg3OS0xLjg3NCwzLjUxMy0zLjY5MiwyLjMzN2MtMS4xMzktMC43MzQtNS43MjMtMy43NTQtNi44MzUtNC42MzMJYy0wLjg2LTAuNjc5LTEuNzUxLTEuNDYzLTAuNzEtMi41OThjMC4zNDgtMC4zNzksMi4yNy0yLjIzNCwzLjcwNy0zLjYxNGMwLjgzMy0wLjgwMSwwLjUzNi0xLjE5Ni0wLjQ2OS0wLjUwOAljLTEuODQzLDEuMjYzLTQuODU4LDMuMjYyLTUuMzk2LDMuNjI1Yy0xLjAyNSwwLjY5LTEuOTg4LDAuODU2LTMuNjY0LDAuMzI5Yy0xLjMyMS0wLjQxNi0yLjU5Ny0wLjgxOS0zLjI2Mi0xLjA3OAlDOS4wOTUsMjUuNjE4LDkuMDc1LDI0LjM3OCwxMC44MzYsMjMuNTkxeiIgb3BhY2l0eT0iLjA3Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTExLjU1MywyMy43MTdjNi45OS0zLjA3NSwxNi4wMzUtNi44MjQsMTcuMjg0LTcuMzQzYzMuMjc1LTEuMzU4LDQuMjgtMS4wOTgsMy43NzksMS45MQljLTAuMzYsMi4xNjItMS4zOTgsOS4zMTktMi4yMjYsMTMuNzc0Yy0wLjQ5MSwyLjY0Mi0xLjU5MywyLjk1NS0zLjMyNSwxLjgxMmMtMC44MzMtMC41NS01LjAzOC0zLjMzMS01Ljk1MS0zLjk4NAljLTAuODMzLTAuNTk1LTEuOTgyLTEuMzExLTAuNTQxLTIuNzIxYzAuNTEzLTAuNTAyLDMuODc0LTMuNzEyLDYuNDkzLTYuMjFjMC4zNDMtMC4zMjgtMC4wODgtMC44NjctMC40ODQtMC42MDQJYy0zLjUzLDIuMzQxLTguNDI0LDUuNTktOS4wNDcsNi4wMTNjLTAuOTQxLDAuNjM5LTEuODQ1LDAuOTMyLTMuNDY3LDAuNDY2Yy0xLjIyNi0wLjM1Mi0yLjQyMy0wLjc3Mi0yLjg4OS0wLjkzMglDOS4zODQsMjUuMjgyLDkuODEsMjQuNDg0LDExLjU1MywyMy43MTd6Ii8+PC9zdmc+">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="com.github.dddpaul.camunda:telegram:1" />
-        <zeebe:ioMapping>
-          <zeebe:input source="admin" target="authentication.user" />
-          <zeebe:input source="admin" target="authentication.token" />
-          <zeebe:input source="Application approved!" target="message" />
-        </zeebe:ioMapping>
-        <zeebe:taskHeaders>
-          <zeebe:header key="resultVariable" />
-          <zeebe:header key="resultExpression" />
-          <zeebe:header key="errorExpression" />
-          <zeebe:header key="retryBackoff" value="PT0S" />
-        </zeebe:taskHeaders>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0d381jo</bpmn:incoming>
-      <bpmn:outgoing>Flow_0cczzg0</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_0cczzg0" sourceRef="Activity_14yp08k" targetRef="Gateway_1oonlek" />
+    <bpmn:sequenceFlow id="Flow_0cczzg0" sourceRef="Activity_1mgw3t3" targetRef="Gateway_1oonlek" />
     <bpmn:intermediateCatchEvent id="Event_05xx7b3" name="Poll for decision" zeebe:modelerTemplate="io.camunda.connectors.http.Polling" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;utf8,%3C%3Fxml version=&#39;1.0&#39;%3F%3E%3Csvg width=&#39;18&#39; height=&#39;18&#39; xmlns=&#39;http://www.w3.org/2000/svg&#39; xmlns:svg=&#39;http://www.w3.org/2000/svg&#39;%3E%3Cg class=&#39;layer&#39;%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cpath d=&#39;m17.03,9c0,4.45 -3.6,8.05 -8.05,8.05c-4.45,0 -8.05,-3.6 -8.05,-8.05c0,-4.45 3.6,-8.05 8.05,-8.05c4.45,0 8.05,3.6 8.05,8.05z&#39; fill=&#39;%23505562&#39; id=&#39;svg_1&#39;/%3E%3Cpath d=&#39;m4.93,14.16l1.85,-10.45l3.36,0c1.05,0 1.84,0.27 2.37,0.81c0.54,0.53 0.8,1.21 0.8,2.06c0,0.86 -0.24,1.58 -0.73,2.13c-0.47,0.55 -1.12,0.93 -1.95,1.14l-0.48,0.09l-0.53,0.03l-0.6,0.05l-1.79,0l-0.73,4.14l-1.58,0zm2.57,-5.57l1.74,0c0.76,0 1.35,-0.17 1.78,-0.5c0.44,-0.35 0.65,-0.82 0.65,-1.42c0,-0.48 -0.15,-0.85 -0.44,-1.12c-0.3,-0.28 -0.77,-0.42 -1.42,-0.42l-1.7,0l-0.61,3.46z&#39; fill=&#39;white&#39; id=&#39;svg_2&#39;/%3E%3C/g%3E%3C/svg%3E">
       <bpmn:extensionElements>
         <zeebe:properties>
@@ -147,12 +129,30 @@
       <bpmn:messageEventDefinition id="MessageEventDefinition_0w8mm8q" messageRef="Message_1672635" />
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="Flow_1e79bo6" sourceRef="Event_05xx7b3" targetRef="Gateway_ApplicationAccepted" />
+    <bpmn:serviceTask id="Activity_1mgw3t3" name="Send message to dddpaul" zeebe:modelerTemplate="com.github.dddpaul.camunda.connector.telegram.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB2aWV3Qm94PSIwIDAgNDggNDgiIHdpZHRoPSI0OHB4IiBoZWlnaHQ9IjQ4cHgiPjxwYXRoIGZpbGw9IiMyOWI2ZjYiIGQ9Ik0yNCA0QTIwIDIwIDAgMSAwIDI0IDQ0QTIwIDIwIDAgMSAwIDI0IDRaIi8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTMzLjk1LDE1bC0zLjc0NiwxOS4xMjZjMCwwLTAuMTYxLDAuODc0LTEuMjQ1LDAuODc0Yy0wLjU3NiwwLTAuODczLTAuMjc0LTAuODczLTAuMjc0bC04LjExNC02LjczMyBsLTMuOTctMi4wMDFsLTUuMDk1LTEuMzU1YzAsMC0wLjkwNy0wLjI2Mi0wLjkwNy0xLjAxMmMwLTAuNjI1LDAuOTMzLTAuOTIzLDAuOTMzLTAuOTIzbDIxLjMxNi04LjQ2OCBjLTAuMDAxLTAuMDAxLDAuNjUxLTAuMjM1LDEuMTI2LTAuMjM0QzMzLjY2NywxNCwzNCwxNC4xMjUsMzQsMTQuNUMzNCwxNC43NSwzMy45NSwxNSwzMy45NSwxNXoiLz48cGF0aCBmaWxsPSIjYjBiZWM1IiBkPSJNMjMsMzAuNTA1bC0zLjQyNiwzLjM3NGMwLDAtMC4xNDksMC4xMTUtMC4zNDgsMC4xMmMtMC4wNjksMC4wMDItMC4xNDMtMC4wMDktMC4yMTktMC4wNDMgbDAuOTY0LTUuOTY1TDIzLDMwLjUwNXoiLz48cGF0aCBmaWxsPSIjY2ZkOGRjIiBkPSJNMjkuODk3LDE4LjE5NmMtMC4xNjktMC4yMi0wLjQ4MS0wLjI2LTAuNzAxLTAuMDkzTDE2LDI2YzAsMCwyLjEwNiw1Ljg5MiwyLjQyNyw2LjkxMiBjMC4zMjIsMS4wMjEsMC41OCwxLjA0NSwwLjU4LDEuMDQ1bDAuOTY0LTUuOTY1bDkuODMyLTkuMDk2QzMwLjAyMywxOC43MjksMzAuMDY0LDE4LjQxNiwyOS44OTcsMTguMTk2eiIvPjwvc3ZnPg==">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="com.github.dddpaul.camunda:telegram:1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="6940579326:AAFrzeiL8KGzxkJZFmj52U04pvktNbsv2jo" target="authentication.token" />
+          <zeebe:input source="361735443" target="chatId" />
+          <zeebe:input source="Application is approved" target="message" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="tgResult" />
+          <zeebe:header key="resultExpression" value="=result" />
+          <zeebe:header key="errorExpression" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0d381jo</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cczzg0</bpmn:outgoing>
+    </bpmn:serviceTask>
     <bpmn:textAnnotation id="TextAnnotation_0hsofyy">
       <bpmn:text>We will use information from application here</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_0i86trb" sourceRef="Task_DetermineRiskLevel" targetRef="TextAnnotation_0hsofyy" />
   </bpmn:process>
-  <bpmn:message id="Message_1672635" name="0a4d1558-6607-4d9b-9fc4-01b2815aaafa" zeebe:modelerTemplate="io.camunda.connectors.http.Polling">
+  <bpmn:message id="Message_1672635" name="d7f0b37e-ef87-43e4-a079-a6c1e0f66163" zeebe:modelerTemplate="io.camunda.connectors.http.Polling">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="=count" />
     </bpmn:extensionElements>
@@ -210,10 +210,6 @@
         <dc:Bounds x="550" y="480" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_14yp08k_di" bpmnElement="Activity_14yp08k">
-        <dc:Bounds x="550" y="160" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_05xx7b3_di" bpmnElement="Event_05xx7b3">
         <dc:Bounds x="582" y="332" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -222,6 +218,10 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0lblzfu" bpmnElement="TextAnnotation_0hsofyy">
         <dc:Bounds x="350" y="80" width="190" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1mgw3t3_di" bpmnElement="Activity_1mgw3t3">
+        <dc:Bounds x="550" y="160" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0cg1053" bpmnElement="Event_0nzb365">
