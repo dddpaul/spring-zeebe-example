@@ -86,6 +86,12 @@ starter-v5:
 worker:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar --app.worker.enabled=true
 
+connector:
+	@CAMUNDA_CONNECTOR_SECRETPROVIDER_ENVIRONMENT_ENABLED=true \
+	CAMUNDA_CONNECTOR_SECRETPROVIDER_ENVIRONMENT_PREFIX="CONNECTOR_SECRETS_" \
+	CONNECTOR_SECRETS_TELEGRAM_BOT_TOKEN=$(shell cat .secrets/telegram-bot-token.txt) \
+	java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar --app.worker.enabled=true
+
 worker-loom:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar --app.worker.enabled=true --app.worker.virtual-thread-pool.enabled=true
 

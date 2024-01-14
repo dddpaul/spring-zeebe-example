@@ -260,3 +260,6 @@ gradle-app.setting
 **/build/
 
 # End of https://www.gitignore.io/api/vim,maven,macos,linux,gradle,eclipse,jetbrains+all,visualstudiocode
+
+# Exclude local secrets
+.secrets/**
