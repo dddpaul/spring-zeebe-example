@@ -24,7 +24,6 @@ dependencies {
     implementation 'me.tongfei:progressbar:0.9.5'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'com.github.dddpaul.camunda:camunda-connector-example:0.1.2-SNAPSHOT'
     implementation 'com.github.dddpaul.camunda:connector-telegram:0.0.1-SNAPSHOT'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     compileOnly 'org.projectlombok:lombok:1.18.30'

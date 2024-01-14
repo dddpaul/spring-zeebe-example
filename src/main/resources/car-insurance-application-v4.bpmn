@@ -22,7 +22,8 @@
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="Gateway_1frf9zp">
       <bpmn:incoming>Flow_1nseukt</bpmn:incoming>
-      <bpmn:incoming>Flow_07z1ed5</bpmn:incoming>
+      <bpmn:incoming>Flow_02kkgm2</bpmn:incoming>
+      <bpmn:incoming>Flow_15511xb</bpmn:incoming>
       <bpmn:outgoing>Flow_1qwmj19</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="EndEvent_ApplicationApproved" name="Application Approved">
@@ -77,9 +78,6 @@
     <bpmn:sequenceFlow id="Flow_1ipz51a" name="Yellow" sourceRef="Gateway_RiskLevel" targetRef="Event_05xx7b3">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=riskLevel = "yellow"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_15511xb" name="Red" sourceRef="Gateway_RiskLevel" targetRef="Activity_00hggeg">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=riskLevel = "red"</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_08pbke2" name="Yes" sourceRef="Gateway_ApplicationAccepted" targetRef="Gateway_1oonlek">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved = "yes"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -87,28 +85,9 @@
     <bpmn:sequenceFlow id="Flow_1nseukt" name="No" sourceRef="Gateway_ApplicationAccepted" targetRef="Gateway_1frf9zp">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved = "no"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_02kkgm2" sourceRef="Event_0nzb365" targetRef="Activity_00hggeg" />
     <bpmn:sequenceFlow id="Flow_1qwmj19" sourceRef="Gateway_1frf9zp" targetRef="Task_RejectApplication" />
     <bpmn:sequenceFlow id="Flow_0tirnwp" sourceRef="Task_ApproveApplication" targetRef="EndEvent_ApplicationApproved" />
     <bpmn:sequenceFlow id="Flow_0psmuqi" sourceRef="Task_RejectApplication" targetRef="EndEvent_ApplicationRejected" />
-    <bpmn:serviceTask id="Activity_00hggeg" name="Example connector" zeebe:modelerTemplate="io.camunda.connector.Template.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPg0KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik01LjI1NTg5IDE2QzMuODg5OSAxNS4wMjkxIDMgMTMuNDQyMiAzIDExLjY0OTNDMyA5LjIwMDA4IDQuOCA2LjkzNzUgNy41IDYuNUM4LjM0Njk0IDQuNDg2MzcgMTAuMzUxNCAzIDEyLjY4OTMgM0MxNS42ODQgMyAxOC4xMzE3IDUuMzIyNTEgMTguMyA4LjI1QzE5Ljg4OTMgOC45NDQ4OCAyMSAxMC42NTAzIDIxIDEyLjQ5NjlDMjEgMTQuMDU4MiAyMC4yMDYgMTUuNDMzOSAxOSAxNi4yNDE3TTEyIDIxVjExTTEyIDIxTDkgMThNMTIgMjFMMTUgMTgiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4NCjwvc3ZnPg==">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="io.camunda:template:1" />
-        <zeebe:ioMapping>
-          <zeebe:input source="admin" target="authentication.user" />
-          <zeebe:input source="admin" target="authentication.token" />
-          <zeebe:input source="Application rejected!" target="message" />
-        </zeebe:ioMapping>
-        <zeebe:taskHeaders>
-          <zeebe:header key="errorExpression" />
-          <zeebe:header key="retryBackoff" value="PT0S" />
-        </zeebe:taskHeaders>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_15511xb</bpmn:incoming>
-      <bpmn:incoming>Flow_02kkgm2</bpmn:incoming>
-      <bpmn:outgoing>Flow_07z1ed5</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_07z1ed5" sourceRef="Activity_00hggeg" targetRef="Gateway_1frf9zp" />
     <bpmn:sequenceFlow id="Flow_0cczzg0" sourceRef="Activity_1mgw3t3" targetRef="Gateway_1oonlek" />
     <bpmn:intermediateCatchEvent id="Event_05xx7b3" name="Poll for decision" zeebe:modelerTemplate="io.camunda.connectors.http.Polling" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;utf8,%3C%3Fxml version=&#39;1.0&#39;%3F%3E%3Csvg width=&#39;18&#39; height=&#39;18&#39; xmlns=&#39;http://www.w3.org/2000/svg&#39; xmlns:svg=&#39;http://www.w3.org/2000/svg&#39;%3E%3Cg class=&#39;layer&#39;%3E%3Ctitle%3ELayer 1%3C/title%3E%3Cpath d=&#39;m17.03,9c0,4.45 -3.6,8.05 -8.05,8.05c-4.45,0 -8.05,-3.6 -8.05,-8.05c0,-4.45 3.6,-8.05 8.05,-8.05c4.45,0 8.05,3.6 8.05,8.05z&#39; fill=&#39;%23505562&#39; id=&#39;svg_1&#39;/%3E%3Cpath d=&#39;m4.93,14.16l1.85,-10.45l3.36,0c1.05,0 1.84,0.27 2.37,0.81c0.54,0.53 0.8,1.21 0.8,2.06c0,0.86 -0.24,1.58 -0.73,2.13c-0.47,0.55 -1.12,0.93 -1.95,1.14l-0.48,0.09l-0.53,0.03l-0.6,0.05l-1.79,0l-0.73,4.14l-1.58,0zm2.57,-5.57l1.74,0c0.76,0 1.35,-0.17 1.78,-0.5c0.44,-0.35 0.65,-0.82 0.65,-1.42c0,-0.48 -0.15,-0.85 -0.44,-1.12c-0.3,-0.28 -0.77,-0.42 -1.42,-0.42l-1.7,0l-0.61,3.46z&#39; fill=&#39;white&#39; id=&#39;svg_2&#39;/%3E%3C/g%3E%3C/svg%3E">
       <bpmn:extensionElements>
@@ -147,6 +126,10 @@
       <bpmn:incoming>Flow_0d381jo</bpmn:incoming>
       <bpmn:outgoing>Flow_0cczzg0</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_15511xb" name="Red" sourceRef="Gateway_RiskLevel" targetRef="Gateway_1frf9zp">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=riskLevel = "red"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_02kkgm2" sourceRef="Event_0nzb365" targetRef="Gateway_1frf9zp" />
     <bpmn:textAnnotation id="TextAnnotation_0hsofyy">
       <bpmn:text>We will use information from application here</bpmn:text>
     </bpmn:textAnnotation>
@@ -206,10 +189,6 @@
       <bpmndi:BPMNShape id="BPMNShape_1qyfg28" bpmnElement="Task_DetermineRiskLevel">
         <dc:Bounds x="250" y="160" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_14wypqp" bpmnElement="Activity_00hggeg">
-        <dc:Bounds x="550" y="480" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_05xx7b3_di" bpmnElement="Event_05xx7b3">
         <dc:Bounds x="582" y="332" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -253,7 +232,7 @@
       <bpmndi:BPMNEdge id="BPMNEdge_0brtct8" bpmnElement="Flow_15511xb">
         <di:waypoint x="430" y="225" />
         <di:waypoint x="430" y="520" />
-        <di:waypoint x="550" y="520" />
+        <di:waypoint x="855" y="520" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="449" y="493" width="21" height="14" />
         </bpmndi:BPMNLabel>
@@ -279,7 +258,7 @@
       <bpmndi:BPMNEdge id="BPMNEdge_0pd6skn" bpmnElement="Flow_02kkgm2">
         <di:waypoint x="300" y="258" />
         <di:waypoint x="300" y="520" />
-        <di:waypoint x="550" y="520" />
+        <di:waypoint x="855" y="520" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_1q4zfyd" bpmnElement="Flow_1qwmj19">
         <di:waypoint x="905" y="520" />
@@ -292,10 +271,6 @@
       <bpmndi:BPMNEdge id="BPMNEdge_08yuc50" bpmnElement="Flow_0psmuqi">
         <di:waypoint x="1070" y="520" />
         <di:waypoint x="1152" y="520" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_07z1ed5_di" bpmnElement="Flow_07z1ed5">
-        <di:waypoint x="650" y="520" />
-        <di:waypoint x="855" y="520" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0cczzg0_di" bpmnElement="Flow_0cczzg0">
         <di:waypoint x="650" y="200" />
