@@ -19,8 +19,8 @@ repositories {
 }
 
 dependencies {
-    implementation "io.camunda:spring-zeebe-starter:8.3.4"
-    implementation 'io.camunda.connector:spring-boot-starter-camunda-connectors:8.3.2'
+    implementation "io.camunda:spring-zeebe-starter:8.4.0"
+    implementation 'io.camunda.connector:spring-boot-starter-camunda-connectors:8.4.3'
     implementation 'me.tongfei:progressbar:0.9.5'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -33,7 +33,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
-    testImplementation 'io.camunda:zeebe-process-test-extension:8.2.8'
+    testImplementation 'io.camunda:zeebe-process-test-extension:8.4.0'
 }
 
 dependencyManagement {
