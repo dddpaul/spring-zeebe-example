@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.13.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0" camunda:diagramRelationId="4fad734f-e576-43e4-b9fb-ca2a29ce6766">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.19.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0" camunda:diagramRelationId="4fad734f-e576-43e4-b9fb-ca2a29ce6766">
   <bpmn:process id="CarInsuranceApplicationProcess" name="Car Insurance Application" isExecutable="true">
     <bpmn:startEvent id="StartEvent_InsuranceApplicationReceived" name="Insurance Application Received">
       <bpmn:outgoing>Flow_0vbcvpl</bpmn:outgoing>
@@ -83,14 +83,14 @@
     </bpmn:sendTask>
     <bpmn:serviceTask id="Task_ApproveApplication" name="Approve Application">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="approve-app" retries="1" />
+        <zeebe:taskDefinition type="approve-app" retries="3" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0nv2kj0</bpmn:incoming>
       <bpmn:outgoing>Flow_0tirnwp</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Task_RejectApplication" name="Reject Application">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="reject-app" retries="1" />
+        <zeebe:taskDefinition type="reject-app" retries="3" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1qwmj19</bpmn:incoming>
       <bpmn:outgoing>Flow_0psmuqi</bpmn:outgoing>
@@ -103,7 +103,7 @@
     </bpmn:boundaryEvent>
     <bpmn:serviceTask id="Task_DetermineRiskLevel" name="Determine Risk Level">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="risk-level" retries="1" />
+        <zeebe:taskDefinition type="risk-level" retries="3" />
         <zeebe:ioMapping>
           <zeebe:output source="=riskLevel" target="riskLevel" />
         </zeebe:ioMapping>
