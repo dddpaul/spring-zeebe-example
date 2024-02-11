@@ -30,11 +30,9 @@ camunda:
   connector:
     polling:
       enabled: false
-
-# Configuration for Operate client
-operate:
-  client:
-    enabled: false
+  operate:
+    client:
+      enabled: false
 
 # Configuration for the application
 app:
