@@ -17,11 +17,10 @@ zeebe:
       # Number of worker threads processing jobs in parallel
       # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.numJobWorkerExecutionThreads, default = 1
       threads: 8
-      job:
-        # Poll interval for job activation requests
-        # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobPollInterval, default = 100ms
-        poll-interval: 100ms
-        zeebe:
+    job:
+      # Poll interval for job activation requests
+      # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobPollInterval, default = 100ms
+      poll-interval: 100ms
     # Experimental job streaming feature, see https://github.com/camunda-community-hub/spring-zeebe/pull/490
     default-job-worker-stream-enabled: false
 
