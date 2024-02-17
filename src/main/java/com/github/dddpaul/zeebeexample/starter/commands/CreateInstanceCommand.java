@@ -30,9 +30,9 @@ public class CreateInstanceCommand {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public ProcessInstanceEvent execute(long counter) throws JsonProcessingException, InterruptedException {
-        Map<String, String> variables = config.getVariables();
+        Map<String, String> variables = config.variables();
         variables.put("count", String.valueOf(counter));
-        if (config.isRandom()) {
+        if (config.random()) {
             Random random = new Random();
             variables.put("chance", String.valueOf(random.nextInt(RiskLevel.values().length + 1)));
         }
@@ -41,7 +41,7 @@ public class CreateInstanceCommand {
             try {
                 ProcessInstanceEvent event = client
                         .newCreateInstanceCommand()
-                        .bpmnProcessId(config.getProcess())
+                        .bpmnProcessId(config.process())
                         .latestVersion()
                         .variables(s)
                         .send()

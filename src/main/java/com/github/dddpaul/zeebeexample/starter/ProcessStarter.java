@@ -36,25 +36,25 @@ public class ProcessStarter {
     private final AtomicLong processCounter = new AtomicLong(0);
 
     public void startParallelProcesses() {
-        try (ExecutorService pool = Executors.newFixedThreadPool(config.getThreads())) {
+        try (ExecutorService pool = Executors.newFixedThreadPool(config.threads())) {
 
-            List<ProgressBar> bars = IntStream.range(0, config.getThreads())
+            List<ProgressBar> bars = IntStream.range(0, config.threads())
                     .mapToObj(i -> new ProgressBarBuilder()
                             .setTaskName(String.format("%10s", "Thread-" + i))
-                            .setInitialMax(config.getCount())
+                            .setInitialMax(config.count())
                             .showSpeed()
                             .build())
                     .toList();
 
             CompletableFuture<?>[] futures = bars.stream()
-                    .map(bar -> CompletableFuture.runAsync(startProcesses(bar, config.getCount()), pool))
+                    .map(bar -> CompletableFuture.runAsync(startProcesses(bar, config.count()), pool))
                     .toArray(CompletableFuture[]::new);
 
             CompletableFuture.allOf(futures).join();
             pool.shutdown();
         }
-        if (processCounter.get() != config.getCount() * config.getThreads()) {
-            throw new RuntimeException("Actual processes created: %d, expected: %d".formatted(processCounter.get(), config.getCount()));
+        if (processCounter.get() != config.count() * config.threads()) {
+            throw new RuntimeException("Actual processes created: %d, expected: %d".formatted(processCounter.get(), config.count()));
         }
     }
 

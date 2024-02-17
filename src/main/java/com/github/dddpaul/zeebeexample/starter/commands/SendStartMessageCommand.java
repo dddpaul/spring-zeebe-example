@@ -27,15 +27,15 @@ public class SendStartMessageCommand {
     private ZeebeClient client;
 
     public PublishMessageResponse execute() throws JsonProcessingException {
-        Map<String, String> variables = config.getVariables();
-        if (config.isRandom()) {
+        Map<String, String> variables = config.variables();
+        if (config.random()) {
             Random random = new Random();
             variables.put("chance", String.valueOf(random.nextInt(RiskLevel.values().length + 1)));
         }
         ObjectMapper objectMapper = new ObjectMapper();
         PublishMessageResponse response = client
                 .newPublishMessageCommand()
-                .messageName(config.getMessages().get("start"))
+                .messageName(config.messages().get("start"))
                 .correlationKey("")
                 .variables(objectMapper.writeValueAsString(variables))
                 .send()

@@ -1,6 +1,7 @@
 package com.github.dddpaul.zeebeexample;
 
 import com.github.dddpaul.zeebeexample.starter.ProcessStarter;
+import com.github.dddpaul.zeebeexample.starter.ProcessStarterConfiguration;
 import com.github.dddpaul.zeebeexample.workers.WorkerProgressBar;
 import io.camunda.zeebe.spring.client.annotation.Deployment;
 import io.camunda.zeebe.spring.client.jobhandling.ZeebeClientExecutorService;
@@ -11,6 +12,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 import java.util.concurrent.Executors;
@@ -18,6 +20,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 @SpringBootApplication
 @Deployment(resources = {"classpath*:*.bpmn", "classpath*:*.dmn"})
+@EnableConfigurationProperties(ProcessStarterConfiguration.class)
 public class ZeebeExampleApplication implements ApplicationRunner {
 
     @Value("${app.worker.virtual-thread-pool.size}")
