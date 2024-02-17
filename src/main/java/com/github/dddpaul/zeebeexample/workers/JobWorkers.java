@@ -7,7 +7,6 @@ import com.github.dddpaul.zeebeexample.actuator.ApplicationStats;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import io.camunda.zeebe.spring.client.annotation.Variable;
-import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +33,7 @@ public class JobWorkers {
     @Autowired
     private ApplicationStats stats;
 
-    @Data
-    static class LoopSettings {
-        private int retries;
-        private String timeout;
-    }
+    record LoopSettings (int retries, String timeout) {}
 
     @JobWorker(type = "loop-settings")
     public Map<String, Object> loopSettings(final ActivatedJob job) {

@@ -1,11 +1,8 @@
 package com.github.dddpaul.zeebeexample;
 
 import io.camunda.zeebe.spring.client.exception.ZeebeBpmnError;
-import lombok.Getter;
-
 import java.util.Map;
 
-@Getter
 public enum RiskError {
 
     RISK_LEVEL_ERROR(
@@ -28,5 +25,13 @@ public enum RiskError {
 
     public static ZeebeBpmnError create(RiskError e, Object... args) {
         return new ZeebeBpmnError(e.getCode(), e.getMessage().formatted(args), Map.of());
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
