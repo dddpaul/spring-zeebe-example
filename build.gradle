@@ -15,13 +15,13 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
-        url "https://artifacts.camunda.com/artifactory/camunda-identity-snapshots/"
+        url "https://artifacts.camunda.com/artifactory/camunda-identity/"
     }
 }
 
 dependencies {
-    implementation "io.camunda.spring:spring-boot-starter-camunda:8.4.1"
-    implementation 'io.camunda.connector:spring-boot-starter-camunda-connectors:8.4.4'
+    implementation "io.camunda.spring:spring-boot-starter-camunda:8.4.2"
+    implementation 'io.camunda.connector:spring-boot-starter-camunda-connectors:8.4.5'
     implementation 'me.tongfei:progressbar:0.10.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
