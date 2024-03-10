@@ -263,3 +263,6 @@ gradle-app.setting
 
 # Exclude local secrets
 .secrets/**
+
+# Exclude JFR files
+*.jfr
