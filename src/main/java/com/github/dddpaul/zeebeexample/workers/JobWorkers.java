@@ -69,6 +69,22 @@ public class JobWorkers {
         }
     }
 
+    @JobWorker(type = "risk-level-with-delay")
+    public Map<String, Object> riskLevelWithDelay(final ActivatedJob job, @Variable int chance) throws InterruptedException {
+//        log.info("risk-level-with-delay activated with chance = {}", chance);
+//        Thread.sleep(300);
+        try {
+            if (chance >= RiskLevel.values().length) {
+                throw new RuntimeException("chance = %d is not acceptable".formatted(chance));
+            }
+            return Map.of("riskLevel", RiskLevel.values()[chance].name().toLowerCase());
+        } catch (Exception e) {
+            log.error("Application {} error: {}", job.getProcessInstanceKey(), e.getMessage());
+            throw RiskError.create(RISK_LEVEL_ERROR, e.getMessage());
+        }
+    }
+
+
     @JobWorker(type = "approve-app")
     public void approve(final ActivatedJob job) {
         stats.incrementApproved();
