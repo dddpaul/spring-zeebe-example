@@ -111,6 +111,13 @@ starter-v6_12_3:
 	--app.starter.process=CarInsuranceApplicationProcessV6_12_3 \
 	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
 
+# Process with 12 jobs with dmn and delay, without subprocess
+starter-v6_12_4:
+	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	--app.starter.enabled=true \
+	--app.starter.process=CarInsuranceApplicationProcessV6_12_4 \
+	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
+
 
 worker:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar --app.worker.enabled=true
