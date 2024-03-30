@@ -7,6 +7,7 @@ import com.github.dddpaul.zeebeexample.actuator.ApplicationStats;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import io.camunda.zeebe.spring.client.annotation.Variable;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,9 +71,15 @@ public class JobWorkers {
     }
 
     @JobWorker(type = "risk-level-with-delay")
-    public Map<String, Object> riskLevelWithDelay(final ActivatedJob job, @Variable int chance) throws InterruptedException {
-//        log.info("risk-level-with-delay activated with chance = {}", chance);
-//        Thread.sleep(300);
+    public Map<String, Object> riskLevelWithDelay(final ActivatedJob job, @Variable int chance, @Variable String delay) {
+        if (StringUtils.isNotEmpty(delay)) {
+            try {
+                long millis = Duration.parse(delay).toMillis();
+                Thread.sleep(millis);
+            } catch (Exception e) {
+                log.error("Application {} error: {}", job.getProcessInstanceKey(), e.getMessage());
+            }
+        }
         try {
             if (chance >= RiskLevel.values().length) {
                 throw new RuntimeException("chance = %d is not acceptable".formatted(chance));
