@@ -30,7 +30,7 @@ public class ZeebeExampleApplication implements ApplicationRunner {
     @ConditionalOnProperty(value = "app.worker.virtual-thread-pool.enabled", havingValue = "true")
     public ZeebeClientExecutorService zeebeClientExecutorService() {
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(virtualThreadPoolSize, Thread.ofVirtual().factory());
-        return new ZeebeClientExecutorService(pool);
+        return new ZeebeClientExecutorService(pool, true);
     }
     
     @Autowired(required = false)
