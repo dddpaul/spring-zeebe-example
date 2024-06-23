@@ -121,6 +121,7 @@ starter-v6_12_4:
 # Process with 12 subprocesses with dmn, timer and delay (+delay to workers)
 starter-v6_12_5:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	--spring.main.web-application-type=none \
 	--app.starter.enabled=true \
 	--app.starter.process=CarInsuranceApplicationProcessV6_12_5 \
 	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
