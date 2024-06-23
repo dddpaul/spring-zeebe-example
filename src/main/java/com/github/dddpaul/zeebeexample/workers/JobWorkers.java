@@ -72,7 +72,7 @@ public class JobWorkers {
 
     @JobWorker(type = "risk-level-with-delay")
     public Map<String, Object> riskLevelWithDelay(final ActivatedJob job, @Variable int chance, @Variable String delay) {
-        log.info(job.getVariablesAsMap().toString());
+//        log.info(job.getVariablesAsMap().toString());
         if (StringUtils.isNotEmpty(delay)) {
             try {
                 long millis = Duration.parse(delay).toMillis();
