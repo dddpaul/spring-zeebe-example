@@ -126,7 +126,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -195,7 +195,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -264,7 +264,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -333,7 +333,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -405,7 +405,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -474,7 +474,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -543,7 +543,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -612,7 +612,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -681,7 +681,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -750,7 +750,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -825,7 +825,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
@@ -894,7 +894,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="risk-level-with-delay" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="=&#34;PT3S&#34;" target="delay" />
+            <zeebe:input source="=delay" target="delay" />
             <zeebe:output source="=riskLevel" target="riskLevel" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>

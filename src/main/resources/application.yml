@@ -60,6 +60,7 @@ app:
     random: false
     variables:
       chance: 0
+      delay: "PT1S"
 
 # Actuator endpoints
 management:
