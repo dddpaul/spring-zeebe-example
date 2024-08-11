@@ -21,6 +21,8 @@ zeebe:
       # Poll interval for job activation requests
       # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobPollInterval, default = 100ms
       poll-interval: 100ms
+      # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobTimeout, default = 5 min
+      timeout: 300s
     # Experimental job streaming feature, see https://github.com/camunda-community-hub/spring-zeebe/pull/490
     # With Zeebe 8.4 it is stable, see https://docs.camunda.io/docs/apis-tools/java-client/job-worker/#job-streaming
     # And https://zeebe-io.github.io/zeebe-chaos/2024/01/19/Job-Activation-Latency
