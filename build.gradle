@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation "io.camunda.spring:spring-boot-starter-camunda:8.5.3"
+    implementation "io.camunda.spring:spring-boot-starter-camunda:8.5.12"
     implementation 'io.camunda.connector:spring-boot-starter-camunda-connectors:8.5.2'
     implementation 'me.tongfei:progressbar:0.10.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
