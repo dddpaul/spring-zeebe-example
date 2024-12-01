@@ -13,13 +13,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import static io.grpc.Status.*;
 
 @Component
 public class CreateInstanceCommand {
 
     private static final Logger log = LoggerFactory.getLogger(CreateInstanceCommand.class);
+
+    // Deadline is for handling broker flapping, Internal is for handling rebalance, ResourceExhausted/Unavailable is for handling flow control
+    private static final List<Status.Code> TEMPORAL_ERRORS = List.of(
+            DEADLINE_EXCEEDED.getCode(),
+            INTERNAL.getCode(),
+            RESOURCE_EXHAUSTED.getCode(),
+            UNAVAILABLE.getCode());
 
     @Autowired
     private ProcessStarterConfiguration config;
@@ -49,9 +59,10 @@ public class CreateInstanceCommand {
                 log.debug("Application {} sent with variables: {}", event.getProcessInstanceKey(), s);
                 return event;
             } catch (ClientStatusException e) {
-                // Deadline is for handling broker flapping, Internal is for handling rebalance
-                if (Status.DEADLINE_EXCEEDED.equals(e.getStatus()) || (Status.INTERNAL.equals(e.getStatus()))) {
-                    Thread.sleep(1000);
+                if (TEMPORAL_ERRORS.contains(e.getStatus().getCode())) {
+                    Thread.sleep(retries * 1000);
+                } else {
+                    log.error("Permanent error for application: count={}, retry={}", counter, retries, e);
                 }
             }
         }
