@@ -55,6 +55,8 @@ app:
     count: 100
     # Starter thread pool size
     threads: 1
+    # Maximum number of milliseconds to wait for processing
+    deadline: 10000
     # BPMN process id
     process: CarInsuranceApplicationProcess
     messages:
