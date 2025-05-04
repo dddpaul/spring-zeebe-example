@@ -1,17 +1,18 @@
 package com.github.dddpaul.zeebeexample;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.command.DeployResourceCommandStep1;
 import io.camunda.zeebe.client.api.response.*;
 import io.camunda.zeebe.process.test.api.ZeebeTestEngine;
 import io.camunda.zeebe.process.test.extension.ZeebeProcessTest;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeoutException;
 
 @ZeebeProcessTest
 public class ZeebeBaseTest {
@@ -35,8 +36,7 @@ public class ZeebeBaseTest {
                 .join();
     }
 
-    @SneakyThrows
-    public ProcessInstanceEvent createProcessInstance(String processId, Map<String, String> variables) {
+    public ProcessInstanceEvent createProcessInstance(String processId, Map<String, String> variables) throws JsonProcessingException {
         return client
                 .newCreateInstanceCommand()
                 .bpmnProcessId(processId)
@@ -46,7 +46,7 @@ public class ZeebeBaseTest {
                 .join();
     }
 
-    public PublishMessageResponse sendMessage(String messageName, String correlationKey, Map<String, String> variables) {
+    public PublishMessageResponse sendMessage(String messageName, String correlationKey, Map<String, String> variables) throws InterruptedException, TimeoutException {
         PublishMessageResponse response = client
                         .newPublishMessageCommand()
                         .messageName(messageName)
@@ -58,11 +58,11 @@ public class ZeebeBaseTest {
         return response;
     }
 
-    public void completeServiceTask(String jobType, int count) {
+    public void completeServiceTask(String jobType, int count) throws InterruptedException, TimeoutException {
         completeServiceTask(jobType, count, Map.of());
     }
 
-    public void completeServiceTask(String jobType, int count, Map<String, String> variables) {
+    public void completeServiceTask(String jobType, int count, Map<String, String> variables) throws InterruptedException, TimeoutException {
         ActivateJobsResponse response = client.newActivateJobsCommand()
                 .jobType(jobType)
                 .maxJobsToActivate(count)
@@ -84,12 +84,12 @@ public class ZeebeBaseTest {
         waitForIdleState(Duration.ofSeconds(1));
     }
 
-    public void throwErrorServiceTask(String jobType, int count) {
+    public void throwErrorServiceTask(String jobType, int count) throws InterruptedException, TimeoutException {
         throwErrorServiceTask(jobType, count, Map.of());
     }
 
 
-    public void throwErrorServiceTask(String jobType, int count, Map<String, String> variables) {
+    public void throwErrorServiceTask(String jobType, int count, Map<String, String> variables) throws InterruptedException, TimeoutException {
         ActivateJobsResponse response = client.newActivateJobsCommand()
                 .jobType(jobType)
                 .maxJobsToActivate(count)
@@ -144,13 +144,11 @@ public class ZeebeBaseTest {
      * an idle state is reached. Only if no idle state is reached during the {@code duration}
      * passed in as argument, then a timeout exception will be thrown.
      */
-    @SneakyThrows
-    public void waitForIdleState(Duration duration) {
+    public void waitForIdleState(Duration duration) throws InterruptedException, TimeoutException {
         engine.waitForIdleState(duration);
     }
 
-    @SneakyThrows
-    public void waitForBusyState(Duration duration) {
+    public void waitForBusyState(Duration duration) throws InterruptedException, TimeoutException {
         engine.waitForBusyState(duration);
     }
 }

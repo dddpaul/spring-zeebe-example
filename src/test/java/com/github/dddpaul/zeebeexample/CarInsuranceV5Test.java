@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 public class CarInsuranceV5Test extends ZeebeBaseTest {
 
@@ -23,7 +24,7 @@ public class CarInsuranceV5Test extends ZeebeBaseTest {
     }
 
     @Test
-    void shouldApproveApplicationWhenRiskLevelIsGreen() {
+    void shouldApproveApplicationWhenRiskLevelIsGreen() throws InterruptedException, TimeoutException {
         // given
         PublishMessageResponse response = sendMessage(PROCESS_START_MESSAGE, "", Map.of());
 
@@ -40,7 +41,7 @@ public class CarInsuranceV5Test extends ZeebeBaseTest {
     }
 
     @Test
-    void shouldRejectApplicationWhenRiskLevelIsRed() {
+    void shouldRejectApplicationWhenRiskLevelIsRed() throws InterruptedException, TimeoutException {
         // given
         PublishMessageResponse response = sendMessage(PROCESS_START_MESSAGE, "", Map.of());
 
@@ -57,7 +58,7 @@ public class CarInsuranceV5Test extends ZeebeBaseTest {
     }
 
     @Test
-    void shouldDelayWhenRiskLevelIsUndefined() {
+    void shouldDelayWhenRiskLevelIsUndefined() throws InterruptedException, TimeoutException {
         // given
         PublishMessageResponse response = sendMessage(PROCESS_START_MESSAGE, "", Map.of());
 

@@ -1,5 +1,6 @@
 package com.github.dddpaul.zeebeexample;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.camunda.zeebe.client.api.response.DeploymentEvent;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
 import io.camunda.zeebe.process.test.assertions.BpmnAssert;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 public class CarInsuranceV2Test extends ZeebeBaseTest {
 
@@ -21,7 +23,7 @@ public class CarInsuranceV2Test extends ZeebeBaseTest {
     }
 
     @Test
-    void shouldApproveApplicationWhenRiskLevelIsGreen() {
+    void shouldApproveApplicationWhenRiskLevelIsGreen() throws JsonProcessingException, InterruptedException, TimeoutException {
         // given
         ProcessInstanceEvent flow = createProcessInstance(PROCESS_ID, Map.of());
 
@@ -36,7 +38,7 @@ public class CarInsuranceV2Test extends ZeebeBaseTest {
     }
 
     @Test
-    void shouldRejectApplicationWhenRiskLevelIsRed() {
+    void shouldRejectApplicationWhenRiskLevelIsRed() throws JsonProcessingException, InterruptedException, TimeoutException {
         // given
         ProcessInstanceEvent flow = createProcessInstance(PROCESS_ID, Map.of());
 
@@ -51,7 +53,7 @@ public class CarInsuranceV2Test extends ZeebeBaseTest {
     }
 
     @Test
-    void shouldDelayWhenRiskLevelIsUndefined() {
+    void shouldDelayWhenRiskLevelIsUndefined() throws JsonProcessingException, InterruptedException, TimeoutException {
         // given
         ProcessInstanceEvent flow = createProcessInstance(PROCESS_ID, Map.of());
 
