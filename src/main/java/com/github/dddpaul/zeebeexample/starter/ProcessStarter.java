@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -26,67 +27,66 @@ public class ProcessStarter {
 
     @Autowired
     private ProcessStarterConfiguration config;
-
     @Autowired
     private CreateInstanceCommand command;
-
     @Autowired
     private ApplicationStats stats;
 
-    private final AtomicLong processCounter = new AtomicLong(0);
-    private final Map<Long, Instant> processInstanceStartTimes = new ConcurrentHashMap<>();
-
-    private final ScheduledExecutorService timeoutChecker = new ScheduledThreadPoolExecutor(1);
+    private final AtomicLong processCounter = new AtomicLong();
+    private final Map<Long, Instant> startTimes = new ConcurrentHashMap<>();
+    private final ScheduledExecutorService timeoutChecker = Executors.newSingleThreadScheduledExecutor();
 
     public void startParallelProcesses() {
-        // Schedule timeout checker to run periodically
-        timeoutChecker.scheduleAtFixedRate(this::checkForTimeouts, 1, 1, TimeUnit.SECONDS);
+        Duration deadline = Duration.ofMillis(config.deadline());
+
+        timeoutChecker.scheduleAtFixedRate(() -> checkTimeouts(deadline), 1, 1, TimeUnit.SECONDS);
 
         try (ExecutorService pool = Executors.newFixedThreadPool(config.threads())) {
             List<ProgressBar> bars = IntStream.range(0, config.threads())
                     .mapToObj(i -> new ProgressBarBuilder()
-                            .setTaskName(String.format("%10s", "Thread-" + i))
+                            .setTaskName(String.format("Thread-%02d", i))
                             .setInitialMax(config.count())
                             .showSpeed()
                             .build())
                     .toList();
 
             CompletableFuture<?>[] futures = bars.stream()
-                    .map(bar -> CompletableFuture.runAsync(startProcesses(bar, config.count()), pool))
+                    .map(bar -> CompletableFuture.runAsync(() -> runProcessWorker(bar, config.count()), pool))
                     .toArray(CompletableFuture[]::new);
 
             CompletableFuture.allOf(futures).join();
-            pool.shutdown();
-        }
-        if (processCounter.get() != config.count() * config.threads()) {
-            throw new RuntimeException("Actual processes created: %d, expected: %d".formatted(processCounter.get(), config.count()));
-        }
-    }
 
-    private Runnable startProcesses(ProgressBar bar, long count) {
-        return () -> {
-            try (bar) {
-                for (long i = 0; i < count; i++) {
-                    ProcessInstanceEvent event = command.execute(processCounter.incrementAndGet());
-                    stats.incrementCreated();
-                    processInstanceStartTimes.put(event.getProcessInstanceKey(), Instant.now());
-                    bar.setExtraMessage(String.format(" %s %17d", event.getBpmnProcessId(), event.getProcessInstanceKey()));
-                    bar.step();
-                }
-            } catch (Exception e) {
-                log.error("Error while starting process", e);
+            if (processCounter.get() != config.count() * config.threads()) {
+                throw new IllegalStateException("Expected %d processes, but started %d".formatted(
+                        config.count() * config.threads(), processCounter.get()));
             }
-        };
+        } catch (Exception e) {
+            log.error("Error while starting parallel processes", e);
+            throw new RuntimeException(e);
+        }
     }
 
-    private void checkForTimeouts() {
-        long deadline = config.deadline();
-        long now = Instant.now().toEpochMilli();
+    private void runProcessWorker(ProgressBar bar, long count) {
+        try (bar) {
+            for (long i = 0; i < count; i++) {
+                long currentCount = processCounter.incrementAndGet();
+                ProcessInstanceEvent event = command.execute(currentCount);
+                stats.incrementCreated();
+                startTimes.put(event.getProcessInstanceKey(), Instant.now());
+                bar.setExtraMessage(" " + event.getBpmnProcessId() + " " + event.getProcessInstanceKey());
+                bar.step();
+            }
+        } catch (Exception e) {
+            log.error("Error in process worker", e);
+        }
+    }
 
-        processInstanceStartTimes.forEach((processInstanceKey, startTime) -> {
-            if (startTime.toEpochMilli() + deadline < now) {
-                log.error("Process instance {} did not complete within {} seconds", processInstanceKey, deadline);
-                processInstanceStartTimes.remove(processInstanceKey); // avoid repeated logging
+    private void checkTimeouts(Duration deadline) {
+        Instant now = Instant.now();
+        startTimes.forEach((key, start) -> {
+            if (Duration.between(start, now).compareTo(deadline) > 0) {
+                log.error("Process instance {} exceeded timeout of {}", key, deadline);
+                startTimes.remove(key); // remove after timeout is logged
             }
         });
     }
