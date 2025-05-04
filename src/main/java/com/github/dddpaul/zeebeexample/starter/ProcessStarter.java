@@ -33,7 +33,7 @@ public class ProcessStarter {
     private ApplicationStats stats;
 
     private final AtomicLong processCounter = new AtomicLong();
-    private final Map<Long, Instant> startTimes = new ConcurrentHashMap<>();
+    private final Map<Long, Instant> processesTimes = new ConcurrentHashMap<>();
     private final ScheduledExecutorService timeoutChecker = Executors.newSingleThreadScheduledExecutor();
 
     public void startParallelProcesses() {
@@ -71,7 +71,7 @@ public class ProcessStarter {
                 long currentCount = processCounter.incrementAndGet();
                 ProcessInstanceEvent event = command.execute(currentCount);
                 stats.incrementCreated();
-                startTimes.put(event.getProcessInstanceKey(), Instant.now());
+                processesTimes.put(event.getProcessInstanceKey(), Instant.now());
                 bar.setExtraMessage(" " + event.getBpmnProcessId() + " " + event.getProcessInstanceKey());
                 bar.step();
             }
@@ -82,10 +82,11 @@ public class ProcessStarter {
 
     private void checkTimeouts(Duration deadline) {
         Instant now = Instant.now();
-        startTimes.forEach((key, start) -> {
+        processesTimes.forEach((key, start) -> {
             if (Duration.between(start, now).compareTo(deadline) > 0) {
                 log.error("Process instance {} exceeded timeout of {}", key, deadline);
-                startTimes.remove(key); // remove after timeout is logged
+                processesTimes.remove(key);
+                stats.incrementCancelled();
             }
         });
     }
