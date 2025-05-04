@@ -41,3 +41,8 @@ dependencyManagement {
 test {
     useJUnitPlatform()
 }
+
+// Switch to static agent loading (recommended for future JDKs)
+tasks.test {
+    jvmArgs("-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains("byte-buddy-agent") }}")
+}
