@@ -38,7 +38,6 @@ public class ProcessStarter {
 
     public void startParallelProcesses() {
         Duration deadline = Duration.ofMillis(config.deadline());
-
         timeoutChecker.scheduleAtFixedRate(() -> checkTimeouts(deadline), 1, 1, TimeUnit.SECONDS);
 
         try (ExecutorService pool = Executors.newFixedThreadPool(config.threads())) {
@@ -51,7 +50,7 @@ public class ProcessStarter {
                     .toList();
 
             CompletableFuture<?>[] futures = bars.stream()
-                    .map(bar -> CompletableFuture.runAsync(() -> runProcessWorker(bar, config.count()), pool))
+                    .map(bar -> CompletableFuture.runAsync(() -> startProcesses(bar, config.count()), pool))
                     .toArray(CompletableFuture[]::new);
 
             CompletableFuture.allOf(futures).join();
@@ -66,7 +65,7 @@ public class ProcessStarter {
         }
     }
 
-    private void runProcessWorker(ProgressBar bar, long count) {
+    private void startProcesses(ProgressBar bar, long count) {
         try (bar) {
             for (long i = 0; i < count; i++) {
                 long currentCount = processCounter.incrementAndGet();
