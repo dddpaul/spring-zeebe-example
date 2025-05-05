@@ -1,6 +1,7 @@
 package com.github.dddpaul.zeebeexample.starter;
 
 import com.github.dddpaul.zeebeexample.actuator.ApplicationStats;
+import com.github.dddpaul.zeebeexample.registry.ProcessRegistry;
 import com.github.dddpaul.zeebeexample.starter.commands.CreateInstanceCommand;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
 import me.tongfei.progressbar.ProgressBar;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
@@ -31,9 +31,10 @@ public class ProcessStarter {
     private CreateInstanceCommand command;
     @Autowired
     private ApplicationStats stats;
+    @Autowired
+    private ProcessRegistry registry;
 
     private final AtomicLong processCounter = new AtomicLong();
-    private final Map<Long, Instant> processesTimes = new ConcurrentHashMap<>();
     private final ScheduledExecutorService timeoutChecker = Executors.newSingleThreadScheduledExecutor();
 
     public void startParallelProcesses() {
@@ -71,7 +72,7 @@ public class ProcessStarter {
                 long currentCount = processCounter.incrementAndGet();
                 ProcessInstanceEvent event = command.execute(currentCount);
                 stats.incrementCreated();
-                processesTimes.put(event.getProcessInstanceKey(), Instant.now());
+                registry.put(event.getProcessInstanceKey(), Instant.now());
                 bar.setExtraMessage(" " + event.getBpmnProcessId() + " " + event.getProcessInstanceKey());
                 bar.step();
             }
@@ -82,10 +83,10 @@ public class ProcessStarter {
 
     private void checkTimeouts(Duration deadline) {
         Instant now = Instant.now();
-        processesTimes.forEach((key, start) -> {
+        registry.all().forEach((key, start) -> {
             if (Duration.between(start, now).compareTo(deadline) > 0) {
                 log.error("Process instance {} exceeded timeout of {}", key, deadline);
-                processesTimes.remove(key);
+                registry.remove(key);
                 stats.incrementCancelled();
             }
         });

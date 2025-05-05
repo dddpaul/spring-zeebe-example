@@ -28,6 +28,7 @@ dependencies {
 //    implementation 'com.github.dddpaul.camunda:connector-telegram:0.0.1-SNAPSHOT'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'io.camunda:zeebe-process-test-extension:8.6.13'
