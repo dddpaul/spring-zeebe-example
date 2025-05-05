@@ -73,6 +73,11 @@ spring:
   autoconfigure:
     exclude:
       - org.redisson.spring.starter.RedissonAutoConfigurationV2
+  data:
+    redis:
+      database: 0
+      host: 192.168.0.100
+      port: 6379
 
 # Actuator endpoints
 management:
