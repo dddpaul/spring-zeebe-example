@@ -15,7 +15,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
-        url "https://artifacts.camunda.com/artifactory/camunda-identity/"
+        url = "https://artifacts.camunda.com/artifactory/camunda-identity/"
     }
 }
 
@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 //    implementation 'com.github.dddpaul.camunda:connector-telegram:0.0.1-SNAPSHOT'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'io.camunda:zeebe-process-test-extension:8.4.2'
@@ -40,9 +41,4 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
-}
-
-// Switch to static agent loading (recommended for future JDKs)
-tasks.test {
-    jvmArgs("-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains("byte-buddy-agent") }}")
 }
