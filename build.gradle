@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.3'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.github.dddpaul'
@@ -20,9 +20,9 @@ repositories {
 }
 
 dependencies {
-    implementation "io.camunda.spring:spring-boot-starter-camunda:8.5.12"
+    implementation 'io.camunda.spring:spring-boot-starter-camunda:8.5.18'
     implementation 'io.camunda.connector:spring-boot-starter-camunda-connectors:8.5.2'
-    implementation 'me.tongfei:progressbar:0.10.0'
+    implementation 'me.tongfei:progressbar:0.10.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 //    implementation 'com.github.dddpaul.camunda:connector-telegram:0.0.1-SNAPSHOT'
@@ -30,7 +30,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
-    testImplementation 'io.camunda:zeebe-process-test-extension:8.4.2'
+    testImplementation 'io.camunda:zeebe-process-test-extension:8.6.13'
 }
 
 dependencyManagement {
