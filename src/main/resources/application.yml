@@ -30,7 +30,6 @@ zeebe:
     # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.streamEnabled, default = false
     default-job-worker-stream-enabled: true
 
-
 # Disable inbound connectors (to skip Operate client configuration)
 camunda:
   connector:
@@ -66,7 +65,14 @@ app:
       chance: 0
       delay: "PT1S"
   registry:
-    local.enabled: true
+    redis:
+      enabled: false
+
+# Enable or disable Redisson auto-configuration
+spring:
+  autoconfigure:
+    exclude:
+      - org.redisson.spring.starter.RedissonAutoConfigurationV2
 
 # Actuator endpoints
 management:

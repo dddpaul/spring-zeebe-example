@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-@ConditionalOnProperty(value = "app.registry.local.enabled", havingValue = "true")
+@ConditionalOnProperty(value = "app.registry.redis.enabled", havingValue = "false")
 public class LocalRegistryImpl implements ProcessRegistry {
 
     private final ConcurrentHashMap<Long, Instant> processes = new ConcurrentHashMap<>();
