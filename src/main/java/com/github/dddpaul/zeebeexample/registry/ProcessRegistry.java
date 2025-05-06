@@ -1,5 +1,6 @@
 package com.github.dddpaul.zeebeexample.registry;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 
@@ -8,4 +9,5 @@ public interface ProcessRegistry {
     Instant get(long key);
     void put(long key, Instant timestamp);
     void remove(Long key);
+    void checkTimeouts(Duration deadline, Runnable onTimeout);
 }
