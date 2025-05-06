@@ -19,20 +19,29 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
+import static java.util.concurrent.CompletableFuture.runAsync;
+
 @Component
 @ConditionalOnProperty(value = "app.starter.enabled", havingValue = "true")
 public class ProcessStarter {
 
     private static final Logger log = LoggerFactory.getLogger(ProcessStarter.class);
 
+    public ProcessStarter(ProcessStarterConfiguration config, ProcessRegistry registry, CreateInstanceCommand command, ApplicationStats stats) {
+        this.config = config;
+        this.registry = registry;
+        this.command = command;
+        this.stats = stats;
+    }
+
     @Autowired
     private ProcessStarterConfiguration config;
+    @Autowired
+    private ProcessRegistry registry;
     @Autowired
     private CreateInstanceCommand command;
     @Autowired
     private ApplicationStats stats;
-    @Autowired
-    private ProcessRegistry registry;
 
     private final AtomicLong processCounter = new AtomicLong();
 
@@ -47,17 +56,18 @@ public class ProcessStarter {
             try (ExecutorService pool = Executors.newFixedThreadPool(config.threads())) {
                 List<ProgressBar> bars = IntStream.range(0, config.threads())
                         .mapToObj(i -> new ProgressBarBuilder()
-                                .setTaskName(String.format("Thread-%02d", i))
+                                .setTaskName(String.format("%10s", "Thread-" + i))
                                 .setInitialMax(config.count())
                                 .showSpeed()
                                 .build())
                         .toList();
 
                 CompletableFuture<?>[] futures = bars.stream()
-                        .map(bar -> CompletableFuture.runAsync(() -> startProcesses(bar, config.count()), pool))
+                        .map(bar -> runAsync(() -> startProcesses(bar, config.count()), pool))
                         .toArray(CompletableFuture[]::new);
 
                 CompletableFuture.allOf(futures).join();
+//                pool.shutdown();
 
                 if (processCounter.get() != config.count() * config.threads()) {
                     throw new IllegalStateException("Expected %d processes, but started %d".formatted(
@@ -77,11 +87,11 @@ public class ProcessStarter {
                 ProcessInstanceEvent event = command.execute(currentCount);
                 stats.incrementCreated();
                 registry.put(event.getProcessInstanceKey(), Instant.now());
-                bar.setExtraMessage(" " + event.getBpmnProcessId() + " " + event.getProcessInstanceKey());
+                bar.setExtraMessage(String.format(" %s %17d", event.getBpmnProcessId(), event.getProcessInstanceKey()));
                 bar.step();
             }
         } catch (Exception e) {
-            log.error("Error in process worker", e);
+            log.error("Error while starting process", e);
         }
     }
 }
