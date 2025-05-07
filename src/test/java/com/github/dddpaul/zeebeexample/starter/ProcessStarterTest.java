@@ -38,14 +38,14 @@ class ProcessStarterTest {
     void setup() {
         when(config.threads()).thenReturn(2);
         when(config.count()).thenReturn(3L);
-        when(config.deadline()).thenReturn(1000L); // ms
+        when(config.deadline()).thenReturn(100L); // ms
         processStarter = new ProcessStarter(config, registry, command, stats);
     }
 
     @Test
     void testStartProcessesAndTimeouts() throws Exception {
         when(command.execute(anyLong())).thenAnswer(invocation -> {
-            Thread.sleep(1000); // Wait for timeoutChecker
+            Thread.sleep(100); // Wait for timeoutChecker
             ProcessInstanceEvent mockEvent = mock(ProcessInstanceEvent.class);
             when(mockEvent.getBpmnProcessId()).thenReturn("test-process");
             when(mockEvent.getProcessInstanceKey()).thenReturn(123L);
@@ -55,8 +55,8 @@ class ProcessStarterTest {
         // Simulate two processes in registry: one timed out, one still active
         Instant now = Instant.now();
         when(registry.all()).thenReturn(Map.of(
-                1001L, now.minus(Duration.ofMillis(2000)),  // timed out
-                1002L, now.minus(Duration.ofMillis(1000))   // active
+                1001L, now.minus(Duration.ofMillis(200)),  // timed out
+                1002L, now.minus(Duration.ofMillis(50))    // active
         ));
 
         // Run process starter
@@ -68,7 +68,7 @@ class ProcessStarterTest {
         verify(stats, times(6)).incrementCreated();
 
         // Verify timeouts checked and timed-out process removed
-        verify(registry, atLeastOnce()).checkTimeouts(eq(Duration.ofMillis(1000L)), any());
+        verify(registry, atLeastOnce()).checkTimeouts(eq(Duration.ofMillis(100L)), any());
 //        verify(registry).remove(1001L);
 //        verify(stats).incrementCancelled();
 

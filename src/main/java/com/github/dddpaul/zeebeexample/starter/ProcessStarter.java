@@ -50,7 +50,7 @@ public class ProcessStarter {
         try (ScheduledExecutorService timeoutChecker = Executors.newSingleThreadScheduledExecutor()) {
             timeoutChecker.scheduleAtFixedRate(
                     () -> registry.checkTimeouts(deadline, stats::incrementCancelled),
-                    1, 1, TimeUnit.SECONDS
+                    100, 100, TimeUnit.MILLISECONDS
             );
 
             try (ExecutorService pool = Executors.newFixedThreadPool(config.threads())) {
