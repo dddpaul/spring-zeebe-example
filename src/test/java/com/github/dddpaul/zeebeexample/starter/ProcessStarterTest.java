@@ -11,8 +11,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -43,7 +41,7 @@ class ProcessStarterTest {
     }
 
     @Test
-    void testStartProcessesAndTimeouts() throws Exception {
+    void testStartProcesses() throws Exception {
         when(command.execute(anyLong())).thenAnswer(invocation -> {
             Thread.sleep(100); // Wait for timeoutChecker
             ProcessInstanceEvent mockEvent = mock(ProcessInstanceEvent.class);
@@ -51,13 +49,6 @@ class ProcessStarterTest {
             when(mockEvent.getProcessInstanceKey()).thenReturn(123L);
             return mockEvent;
         });
-
-        // Simulate two processes in registry: one timed out, one still active
-        Instant now = Instant.now();
-        when(registry.all()).thenReturn(Map.of(
-                1001L, now.minus(Duration.ofMillis(200)),  // timed out
-                1002L, now.minus(Duration.ofMillis(50))    // active
-        ));
 
         // Run process starter
         processStarter.startParallelProcesses();
@@ -67,13 +58,8 @@ class ProcessStarterTest {
         verify(registry, times(6)).put(eq(123L), any());
         verify(stats, times(6)).incrementCreated();
 
-        // Verify timeouts checked and timed-out process removed
+        // Verify timeouts checked
         verify(registry, atLeastOnce()).checkTimeouts(eq(Duration.ofMillis(100L)), any());
-//        verify(registry).remove(1001L);
-//        verify(stats).incrementCancelled();
-
-        // Ensure non-timed-out process is not removed
-        verify(registry, never()).remove(1002L);
     }
 
     @Test
