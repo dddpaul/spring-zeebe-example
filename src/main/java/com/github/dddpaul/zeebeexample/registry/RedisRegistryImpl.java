@@ -1,12 +1,14 @@
 package com.github.dddpaul.zeebeexample.registry;
 
 import jakarta.annotation.PostConstruct;
+import org.redisson.api.RBucket;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ public class RedisRegistryImpl implements ProcessRegistry {
     private RedissonClient redissonClient;
 
     private RMap<Long, Instant> processes;
+    private Duration deadline;
 
     @PostConstruct
     public void init() {
@@ -37,10 +40,25 @@ public class RedisRegistryImpl implements ProcessRegistry {
     @Override
     public void put(long key, Instant timestamp) {
         processes.put(key, timestamp);
+        RBucket<String> bucket = redissonClient.getBucket("zeebe:timeout:" + key);
+        bucket.set("", deadline);
     }
 
     @Override
     public void remove(Long key) {
         processes.remove(key);
+    }
+
+    @Override
+    public void checkTimeouts(Duration deadline, Runnable onTimeout) {
+        this.deadline = deadline;
+        redissonClient.getTopic("__keyevent@0__:expired").addListener(String.class, (channel, expiredKey) -> {
+            if (expiredKey.startsWith("zeebe:timeout:")) {
+                long key = Long.parseLong(expiredKey.substring("zeebe:timeout:".length()));
+                remove(key);
+                onTimeout.run();
+                System.out.printf("Process instance %s has timed out!\n", key);
+            }
+        });
     }
 }
