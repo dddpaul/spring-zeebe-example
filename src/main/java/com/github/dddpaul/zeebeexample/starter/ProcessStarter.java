@@ -67,7 +67,6 @@ public class ProcessStarter {
                         .toArray(CompletableFuture[]::new);
 
                 CompletableFuture.allOf(futures).join();
-//                pool.shutdown();
 
                 if (processCounter.get() != config.count() * config.threads()) {
                     throw new IllegalStateException("Expected %d processes, but started %d".formatted(
