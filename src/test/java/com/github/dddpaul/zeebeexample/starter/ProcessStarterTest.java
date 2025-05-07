@@ -41,45 +41,50 @@ class ProcessStarterTest {
     }
 
     @Test
-    void testStartProcesses() throws Exception {
+    void testProperProcessCount() throws Exception {
+        // given
         when(command.execute(anyLong())).thenAnswer(invocation -> {
-            Thread.sleep(100); // Wait for timeoutChecker
             ProcessInstanceEvent mockEvent = mock(ProcessInstanceEvent.class);
             when(mockEvent.getBpmnProcessId()).thenReturn("test-process");
             when(mockEvent.getProcessInstanceKey()).thenReturn(123L);
             return mockEvent;
         });
 
-        // Run process starter
+        // when
         processStarter.startParallelProcesses();
 
-        // Verify process was created and registered
+        // then
         verify(command, times(6)).execute(anyLong());
         verify(registry, times(6)).put(eq(123L), any());
         verify(stats, times(6)).incrementCreated();
+    }
 
-        // Verify timeouts checked
+    @Test
+    void testTimeoutCheckerInvoked() throws Exception {
+        // given
+        when(command.execute(anyLong())).thenAnswer(invocation -> {
+            Thread.sleep(100); // Wait for timeoutChecker
+            return mock(ProcessInstanceEvent.class);
+        });
+
+        // when
+        processStarter.startParallelProcesses();
+
+        // then
         verify(registry, atLeastOnce()).checkTimeouts(eq(Duration.ofMillis(100L)), any());
     }
 
     @Test
-    void testExecutorShutdown() throws Exception {
-        when(command.execute(anyLong())).thenReturn(mock(ProcessInstanceEvent.class));
-
-        processStarter.startParallelProcesses();
-
-        // Verify no active threads remain
-        assertEquals(0, Thread.activeCount() - Thread.currentThread().getThreadGroup().activeCount());
-    }
-
-    @Test
     void testProcessCountMismatch() throws Exception {
+        // given
         when(command.execute(anyLong())).thenReturn(mock(ProcessInstanceEvent.class));
         when(config.count()).thenReturn(2L); // Expect 4 processes (2 threads * 2 count)
 
         try {
+            // when
             processStarter.startParallelProcesses();
         } catch (IllegalStateException e) {
+            // then
             assertEquals("Expected 4 processes, but started 3", e.getMessage());
         }
     }
