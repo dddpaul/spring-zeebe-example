@@ -128,12 +128,20 @@ starter-v6_12_5:
 	--app.starter.process=CarInsuranceApplicationProcessV6_12_5 \
 	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
 
-# Process with subprocess, dmn, timer and delay (10 sec). Result is Green after delay timeout.
+# Process with subprocess, dmn, timer and delay (10 sec)
 starter-v7:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
 	--app.starter.enabled=true \
 	--app.registry.redis.enabled=true --spring.autoconfigure.exclude="" \
 	--app.starter.process=CarInsuranceApplicationProcessV7 \
+	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random) --app.starter.variables.chance=$(chance)
+
+# Process with subprocess, timer, inner and outer delay
+starter-v8:
+	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	--app.starter.enabled=true \
+	--app.registry.redis.enabled=true --spring.autoconfigure.exclude="" \
+	--app.starter.process=CarInsuranceApplicationProcessV8 \
 	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random) --app.starter.variables.chance=$(chance)
 
 worker:
