@@ -7,7 +7,6 @@ import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +20,8 @@ public class RedisRegistryImpl implements ProcessRegistry {
     @Autowired
     private RedissonClient redissonClient;
 
-    @Value("${app.starter.timeout}")
-    private Duration timeout;
-
     private RMap<Long, Instant> processes;
+    private Duration timeout;
 
     @PostConstruct
     public void init() {
