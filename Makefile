@@ -151,17 +151,20 @@ worker-loom:
 worker-bar:
 	@LOGGING_LEVEL_COM_GITHUB_DDDPAUL_ZEEBEEXAMPLE_WORKERS=OFF \
 	java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	--app.registry.redis.enabled=true --spring.autoconfigure.exclude="" \
 	--app.worker.enabled=true --app.worker.progress-bar.enabled=true
 
 worker-bar-jfr:
 	@LOGGING_LEVEL_COM_GITHUB_DDDPAUL_ZEEBEEXAMPLE_WORKERS=OFF \
 	java -XX:StartFlightRecording=filename=./ \
 	-jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	--app.registry.redis.enabled=true --spring.autoconfigure.exclude="" \
 	--app.worker.enabled=true --app.worker.progress-bar.enabled=true
 
 worker-bar-loom:
 	@LOGGING_LEVEL_COM_GITHUB_DDDPAUL_ZEEBEEXAMPLE_WORKERS=OFF \
 	java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	--app.registry.redis.enabled=true --spring.autoconfigure.exclude="" \
 	--app.worker.enabled=true --app.worker.virtual-thread-pool.enabled=true --app.worker.progress-bar.enabled=true
 
 http:
