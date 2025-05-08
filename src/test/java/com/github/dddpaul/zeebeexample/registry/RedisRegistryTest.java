@@ -3,6 +3,7 @@ package com.github.dddpaul.zeebeexample.registry;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @Testcontainers
 @ExtendWith(SpringExtension.class)
@@ -50,10 +52,10 @@ public class RedisRegistryTest {
     private RedisRegistryImpl registry;
 
     @Test
-    void checkTimeoutsShouldRemoveExpiredKeysAndRunCallback() throws Exception {
+    void shouldRemoveExpiredAndRunCallback() throws Exception {
         // given
         CountDownLatch latch = new CountDownLatch(1);
-        registry.checkTimeouts(Duration.ofMillis(100), latch::countDown);
+        registry.setExpiration(Duration.ofMillis(100), latch::countDown);
         long key = 123L;
         registry.put(key, Instant.now());
 
@@ -64,6 +66,7 @@ public class RedisRegistryTest {
         assertNull(registry.get(key), "Expired process was not removed");
         assertTrue(triggered, "Timeout callback was not triggered");
     }
+
 
     @AfterAll
     static void stopContainer() {

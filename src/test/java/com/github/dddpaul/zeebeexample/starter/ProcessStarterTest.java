@@ -41,7 +41,7 @@ class ProcessStarterTest {
     }
 
     @Test
-    void testProperProcessCount() throws Exception {
+    void shouldStartProcessesAndIncrementCounter() throws Exception {
         // given
         when(command.execute(anyLong())).thenAnswer(invocation -> {
             ProcessInstanceEvent mockEvent = mock(ProcessInstanceEvent.class);
@@ -60,7 +60,7 @@ class ProcessStarterTest {
     }
 
     @Test
-    void testTimeoutCheckerInvoked() throws Exception {
+    void shouldInvokeTimeoutChecker() throws Exception {
         // given
         when(command.execute(anyLong())).thenAnswer(invocation -> {
             Thread.sleep(100); // Wait for timeoutChecker
@@ -71,11 +71,11 @@ class ProcessStarterTest {
         processStarter.startParallelProcesses();
 
         // then
-        verify(registry, atLeastOnce()).checkTimeouts(eq(Duration.ofMillis(100L)), any());
+        verify(registry, atLeastOnce()).setExpiration(eq(Duration.ofMillis(100L)), any());
     }
 
     @Test
-    void testProcessCountMismatch() throws Exception {
+    void shouldThrowExceptionOnProcessCountMismatch() throws Exception {
         // given
         when(command.execute(anyLong())).thenReturn(mock(ProcessInstanceEvent.class));
         when(config.count()).thenReturn(2L); // Expect 4 processes (2 threads * 2 count)

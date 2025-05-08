@@ -23,23 +23,25 @@ class LocalRegistryTest {
     }
 
     @Test
-    void shouldCheckTimeoutsAndRemoveExpired(@Mock Runnable onTimeout) {
+    void shouldRemoveExpiredAndRunCallback(@Mock Runnable callback) {
+        // given
         Instant oldTime = Instant.now().minus(Duration.ofMinutes(5));
         Instant recentTime = Instant.now().minus(Duration.ofSeconds(30));
-
         registry.put(1L, oldTime);
         registry.put(2L, recentTime);
 
-        registry.checkTimeouts(Duration.ofMinutes(1), onTimeout);
+        // when
+        registry.setExpiration(Duration.ofMinutes(1), callback);
 
-        verify(onTimeout, times(1)).run();
+        // then
+        verify(callback, times(1)).run();
         assertNull(registry.get(1L));
         assertNotNull(registry.get(2L));
     }
 
     @Test
-    void shouldNotCallTimeoutForEmptyRegistry(@Mock Runnable onTimeout) {
-        registry.checkTimeouts(Duration.ofMinutes(1), onTimeout);
-        verifyNoInteractions(onTimeout);
+    void shouldNotInvokeCallbackForEmptyRegistry(@Mock Runnable callback) {
+        registry.setExpiration(Duration.ofMinutes(1), callback);
+        verifyNoInteractions(callback);
     }
 }

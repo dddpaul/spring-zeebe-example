@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Map;
 
 @Component
 @ConditionalOnProperty(value = "app.registry.redis.enabled", havingValue = "true")
@@ -22,16 +21,11 @@ public class RedisRegistryImpl implements ProcessRegistry {
     private RedissonClient redissonClient;
 
     private RMap<Long, Instant> processes;
-    private Duration deadline;
+    private Duration timeout;
 
     @PostConstruct
     public void init() {
         this.processes = redissonClient.getMap("zeebe:process:times");
-    }
-
-    @Override
-    public Map<Long, Instant> all() {
-        return processes.readAllMap();
     }
 
     @Override
@@ -43,24 +37,18 @@ public class RedisRegistryImpl implements ProcessRegistry {
     public void put(long key, Instant timestamp) {
         processes.put(key, timestamp);
         RBucket<String> bucket = redissonClient.getBucket("zeebe:timeout:" + key);
-        bucket.set("", deadline);
+        bucket.set("", timeout);
     }
 
     @Override
-    public void remove(Long key) {
-        processes.remove(key);
-    }
-
-    @Override
-    public void checkTimeouts(Duration deadline, Runnable onTimeout) {
-        this.deadline = deadline;
+    public void setExpiration(Duration timeout, Runnable callback) {
+        this.timeout = timeout;
         RTopic topic = redissonClient.getTopic("__keyevent@0__:expired", StringCodec.INSTANCE);
         topic.addListener(String.class, (channel, expiredKey) -> {
             if (expiredKey.startsWith("zeebe:timeout:")) {
                 long key = Long.parseLong(expiredKey.substring("zeebe:timeout:".length()));
-                remove(key);
-                onTimeout.run();
-                System.out.printf("Process instance %s has timed out!\n", key);
+                processes.remove(key);
+                callback.run();
             }
         });
     }

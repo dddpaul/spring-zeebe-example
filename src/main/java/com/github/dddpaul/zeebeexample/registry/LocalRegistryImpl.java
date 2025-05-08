@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -13,11 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LocalRegistryImpl implements ProcessRegistry {
 
     private final ConcurrentHashMap<Long, Instant> processes = new ConcurrentHashMap<>();
-
-    @Override
-    public Map<Long, Instant> all() {
-        return processes;
-    }
 
     @Override
     public Instant get(long key) {
@@ -30,17 +24,12 @@ public class LocalRegistryImpl implements ProcessRegistry {
     }
 
     @Override
-    public void remove(Long key) {
-        processes.remove(key);
-    }
-
-    @Override
-    public void checkTimeouts(Duration deadline, Runnable onTimeout) {
+    public void setExpiration(Duration timeout, Runnable callback) {
         Instant now = Instant.now();
-        all().forEach((key, start) -> {
-            if (start != null && Duration.between(start, now).compareTo(deadline) > 0) {
-                remove(key);
-                onTimeout.run();
+        processes.forEach((key, start) -> {
+            if (start != null && Duration.between(start, now).compareTo(timeout) > 0) {
+                processes.remove(key);
+                callback.run();
             }
         });
     }

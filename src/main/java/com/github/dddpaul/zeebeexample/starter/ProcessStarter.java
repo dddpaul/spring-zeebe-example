@@ -49,7 +49,7 @@ public class ProcessStarter {
         Duration deadline = Duration.ofMillis(config.deadline());
         try (ScheduledExecutorService timeoutChecker = Executors.newSingleThreadScheduledExecutor()) {
             timeoutChecker.scheduleAtFixedRate(
-                    () -> registry.checkTimeouts(deadline, stats::incrementCancelled),
+                    () -> registry.setExpiration(deadline, stats::incrementCancelled),
                     100, 100, TimeUnit.MILLISECONDS
             );
 
