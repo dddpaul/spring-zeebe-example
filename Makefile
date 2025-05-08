@@ -9,14 +9,14 @@ build:
 starter:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
 	--app.starter.enabled=true \
-	--app.registry.enabled=true --spring.autoconfigure.exclude="" \
+	--app.registry.redis.enabled=true --spring.autoconfigure.exclude="" \
 	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
 
 # Process with subprocess, dmn, timer and delay
 starter-v2:
 	@java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
 	--app.starter.enabled=true \
-	--app.registry.enabled=true --spring.autoconfigure.exclude="" \
+	--app.registry.redis.enabled=true --spring.autoconfigure.exclude="" \
 	--app.starter.process=CarInsuranceApplicationProcessV2 \
 	--app.starter.threads=$(threads) --app.starter.count=$(count) --app.starter.random=$(random)
 

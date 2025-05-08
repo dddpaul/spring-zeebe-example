@@ -46,10 +46,10 @@ public class ProcessStarter {
     private final AtomicLong processCounter = new AtomicLong();
 
     public void startParallelProcesses() {
-        Duration deadline = Duration.ofMillis(config.deadline());
+        Duration timeout = Duration.ofMillis(config.timeout());
         try (ScheduledExecutorService timeoutChecker = Executors.newSingleThreadScheduledExecutor()) {
             timeoutChecker.scheduleAtFixedRate(
-                    () -> registry.setExpiration(deadline, stats::incrementCancelled),
+                    () -> registry.setExpiration(timeout, stats::incrementCancelled),
                     100, 100, TimeUnit.MILLISECONDS
             );
 

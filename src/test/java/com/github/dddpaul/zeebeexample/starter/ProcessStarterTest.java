@@ -36,7 +36,7 @@ class ProcessStarterTest {
     void setup() {
         when(config.threads()).thenReturn(2);
         when(config.count()).thenReturn(3L);
-        when(config.deadline()).thenReturn(100L); // ms
+        when(config.timeout()).thenReturn(100L); // ms
         processStarter = new ProcessStarter(config, registry, command, stats);
     }
 

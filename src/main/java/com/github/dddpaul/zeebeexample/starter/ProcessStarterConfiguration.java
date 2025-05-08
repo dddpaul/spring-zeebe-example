@@ -8,7 +8,7 @@ import java.util.Map;
 public record ProcessStarterConfiguration(
         long count,
         int threads,
-        long deadline,
+        long timeout,
         String process,
         Map<String, String> messages,
         boolean random,
