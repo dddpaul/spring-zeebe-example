@@ -17,6 +17,9 @@ import java.time.Instant;
 @ConditionalOnProperty(value = "app.registry.redis.enabled", havingValue = "true")
 public class RedisRegistryImpl implements ProcessRegistry {
 
+    private static final String PREFIX_MAP = "zeebe:process:";
+    private static final String PREFIX_BUCKET = "zeebe:timeout:";
+
     @Autowired
     private RedissonClient redissonClient;
 
@@ -25,7 +28,7 @@ public class RedisRegistryImpl implements ProcessRegistry {
 
     @PostConstruct
     public void init() {
-        this.processes = redissonClient.getMap("zeebe:process:times");
+        this.processes = redissonClient.getMap(PREFIX_MAP + "times");
     }
 
     @Override
@@ -50,8 +53,8 @@ public class RedisRegistryImpl implements ProcessRegistry {
         this.timeout = timeout;
         RTopic topic = redissonClient.getTopic("__keyevent@0__:expired", StringCodec.INSTANCE);
         topic.addListener(String.class, (channel, expiredKey) -> {
-            if (expiredKey.startsWith("zeebe:timeout:")) {
-                long key = Long.parseLong(expiredKey.substring("zeebe:timeout:".length()));
+            if (expiredKey.startsWith(PREFIX_BUCKET)) {
+                long key = Long.parseLong(expiredKey.substring(PREFIX_BUCKET.length()));
                 processes.remove(key);
                 callback.run();
             }
@@ -59,7 +62,7 @@ public class RedisRegistryImpl implements ProcessRegistry {
     }
 
     public RBucket<String> getBucket(long key) {
-        return redissonClient.getBucket("zeebe:timeout:" + key);
+        return redissonClient.getBucket(PREFIX_BUCKET + key);
     }
 
     public void setTimeout(Duration timeout) {
