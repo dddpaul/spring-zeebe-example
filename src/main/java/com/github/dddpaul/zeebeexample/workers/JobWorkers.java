@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dddpaul.zeebeexample.RiskError;
 import com.github.dddpaul.zeebeexample.RiskLevel;
 import com.github.dddpaul.zeebeexample.actuator.ApplicationStats;
+import com.github.dddpaul.zeebeexample.registry.ProcessRegistry;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import io.camunda.zeebe.spring.client.annotation.Variable;
@@ -30,6 +31,9 @@ public class JobWorkers {
 
     private static final Logger log = LoggerFactory.getLogger(JobWorkers.class);
     private HttpClient client = HttpClient.newHttpClient();
+
+    @Autowired
+    private ProcessRegistry registry;
 
     @Autowired
     private ApplicationStats stats;
@@ -95,12 +99,14 @@ public class JobWorkers {
 
     @JobWorker(type = "approve-app")
     public void approve(final ActivatedJob job) {
+        registry.remove(job.getKey());
         stats.incrementApproved();
         log.info("Application {} approved", job.getProcessInstanceKey());
     }
 
     @JobWorker(type = "reject-app")
     public void reject(final ActivatedJob job) {
+        registry.remove(job.getKey());
         stats.incrementRejected();
         log.info("Application {} rejected", job.getProcessInstanceKey());
     }

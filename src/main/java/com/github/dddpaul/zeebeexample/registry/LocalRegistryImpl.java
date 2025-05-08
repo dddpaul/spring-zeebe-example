@@ -28,6 +28,11 @@ public class LocalRegistryImpl implements ProcessRegistry {
     }
 
     @Override
+    public void remove(long key) {
+        processes.remove(key);
+    }
+
+    @Override
     public void setExpiration(Duration timeout, Runnable callback) {
         timeoutChecker.scheduleAtFixedRate(() -> {
             Instant now = Instant.now();

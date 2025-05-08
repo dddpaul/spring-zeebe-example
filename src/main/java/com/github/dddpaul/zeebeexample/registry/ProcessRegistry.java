@@ -8,5 +8,7 @@ public interface ProcessRegistry {
 
     void put(long key, Instant timestamp);
 
+    void remove(long key);
+
     void setExpiration(Duration timeout, Runnable callback);
 }
