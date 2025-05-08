@@ -8,6 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,20 +25,19 @@ class LocalRegistryTest {
     }
 
     @Test
-    void shouldRemoveExpiredAndRunCallback(@Mock Runnable callback) {
+    void shouldRemoveExpiredAndRunCallback(@Mock Runnable callback) throws Exception {
         // given
-        Instant oldTime = Instant.now().minus(Duration.ofMinutes(5));
-        Instant recentTime = Instant.now().minus(Duration.ofSeconds(30));
-        registry.put(1L, oldTime);
-        registry.put(2L, recentTime);
+        CountDownLatch latch = new CountDownLatch(1);
+        registry.setExpiration(Duration.ofMillis(100), latch::countDown);
+        long key = 123L;
+        registry.put(key, Instant.now());
 
         // when
-        registry.setExpiration(Duration.ofMinutes(1), callback);
+        boolean triggered = latch.await(1000, TimeUnit.MILLISECONDS);
 
         // then
-        verify(callback, times(1)).run();
-        assertNull(registry.get(1L));
-        assertNotNull(registry.get(2L));
+        assertNull(registry.get(key), "Expired process was not removed");
+        assertTrue(triggered, "Timeout callback was not triggered");
     }
 
     @Test

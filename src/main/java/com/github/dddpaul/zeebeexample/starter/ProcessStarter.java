@@ -46,36 +46,29 @@ public class ProcessStarter {
     private final AtomicLong processCounter = new AtomicLong();
 
     public void startParallelProcesses() {
-        Duration timeout = Duration.ofMillis(config.timeout());
-        try (ScheduledExecutorService timeoutChecker = Executors.newSingleThreadScheduledExecutor()) {
-            timeoutChecker.scheduleAtFixedRate(
-                    () -> registry.setExpiration(timeout, stats::incrementCancelled),
-                    100, 100, TimeUnit.MILLISECONDS
-            );
+        registry.setExpiration(Duration.ofMillis(config.timeout()), stats::incrementCancelled);
+        try (ExecutorService pool = Executors.newFixedThreadPool(config.threads())) {
+            List<ProgressBar> bars = IntStream.range(0, config.threads())
+                    .mapToObj(i -> new ProgressBarBuilder()
+                            .setTaskName(String.format("%10s", "Thread-" + i))
+                            .setInitialMax(config.count())
+                            .showSpeed()
+                            .build())
+                    .toList();
 
-            try (ExecutorService pool = Executors.newFixedThreadPool(config.threads())) {
-                List<ProgressBar> bars = IntStream.range(0, config.threads())
-                        .mapToObj(i -> new ProgressBarBuilder()
-                                .setTaskName(String.format("%10s", "Thread-" + i))
-                                .setInitialMax(config.count())
-                                .showSpeed()
-                                .build())
-                        .toList();
+            CompletableFuture<?>[] futures = bars.stream()
+                    .map(bar -> runAsync(() -> startProcesses(bar, config.count()), pool))
+                    .toArray(CompletableFuture[]::new);
 
-                CompletableFuture<?>[] futures = bars.stream()
-                        .map(bar -> runAsync(() -> startProcesses(bar, config.count()), pool))
-                        .toArray(CompletableFuture[]::new);
+            CompletableFuture.allOf(futures).join();
 
-                CompletableFuture.allOf(futures).join();
-
-                if (processCounter.get() != config.count() * config.threads()) {
-                    throw new IllegalStateException("Expected %d processes, but started %d".formatted(
-                            config.count() * config.threads(), processCounter.get()));
-                }
-            } catch (Exception e) {
-                log.error("Error while starting parallel processes", e);
-                throw new RuntimeException(e);
+            if (processCounter.get() != config.count() * config.threads()) {
+                throw new IllegalStateException("Expected %d processes, but started %d".formatted(
+                        config.count() * config.threads(), processCounter.get()));
             }
+        } catch (Exception e) {
+            log.error("Error while starting parallel processes", e);
+            throw new RuntimeException(e);
         }
     }
 
