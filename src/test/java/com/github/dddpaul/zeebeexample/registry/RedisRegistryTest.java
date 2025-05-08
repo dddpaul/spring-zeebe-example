@@ -3,8 +3,8 @@ package com.github.dddpaul.zeebeexample.registry;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.redisson.Redisson;
+import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +22,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verifyNoInteractions;
 
 @Testcontainers
 @ExtendWith(SpringExtension.class)
@@ -63,10 +62,26 @@ public class RedisRegistryTest {
         boolean triggered = latch.await(1000, TimeUnit.MILLISECONDS);
 
         // then
-        assertNull(registry.get(key), "Expired process was not removed");
-        assertTrue(triggered, "Timeout callback was not triggered");
+        assertNull(registry.get(key), "Expired process should be removed");
+        assertTrue(triggered, "Timeout callback should be triggered");
     }
 
+    @Test
+    void shouldResetBucketTTLWhenKeyIsRemoved() throws Exception {
+        // given
+        long key = 123L;
+        registry.setTimeout(Duration.ofMillis(1000));
+        registry.put(key, Instant.now());
+        RBucket<String> bucket = registry.getBucket(key);
+        assertTrue(bucket.getExpireTime() > 0, "Initial expire time should be set and positive");
+
+        // when
+        registry.remove(key);
+
+        // then
+        assertNull(registry.get(key), "Process should be removed");
+        assertTrue(bucket.getExpireTime() <= 0, "Expire time should be reset");
+    }
 
     @AfterAll
     static void stopContainer() {

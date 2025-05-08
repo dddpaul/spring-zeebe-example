@@ -7,6 +7,7 @@ import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +21,10 @@ public class RedisRegistryImpl implements ProcessRegistry {
     @Autowired
     private RedissonClient redissonClient;
 
-    private RMap<Long, Instant> processes;
+    @Value("${app.starter.timeout}")
     private Duration timeout;
+
+    private RMap<Long, Instant> processes;
 
     @PostConstruct
     public void init() {
@@ -35,15 +38,14 @@ public class RedisRegistryImpl implements ProcessRegistry {
 
     @Override
     public void remove(long key) {
-        RBucket<String> bucket = redissonClient.getBucket("zeebe:timeout:" + key);
-        bucket.delete(); // Reset TTL and remove key
+        getBucket(key).delete();
+        processes.remove(key);
     }
 
     @Override
     public void put(long key, Instant timestamp) {
         processes.put(key, timestamp);
-        RBucket<String> bucket = redissonClient.getBucket("zeebe:timeout:" + key);
-        bucket.set("", timeout);
+        getBucket(key).set("", timeout);
     }
 
     @Override
@@ -57,5 +59,13 @@ public class RedisRegistryImpl implements ProcessRegistry {
                 callback.run();
             }
         });
+    }
+
+    public RBucket<String> getBucket(long key) {
+        return redissonClient.getBucket("zeebe:timeout:" + key);
+    }
+
+    public void setTimeout(Duration timeout) {
+        this.timeout = timeout;
     }
 }
