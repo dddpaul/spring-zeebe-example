@@ -7,12 +7,9 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -30,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(properties = {
         "app.registry.redis.enabled=true"
 })
-@ContextConfiguration(initializers = RedisRegistryTest.Initializer.class)
 public class RedisRegistryTest {
 
     @Container
@@ -38,40 +34,8 @@ public class RedisRegistryTest {
             .withExposedPorts(6379)
             .withCommand("redis-server", "--notify-keyspace-events", "Ex");
 
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext ctx) {
-            String redisUrl = "redis://" + redis.getHost() + ":" + redis.getMappedPort(6379);
-            TestPropertyValues.of(
-                    "spring.redis.url=" + redisUrl,
-                    "spring.redis.host=" + redis.getHost(),
-                    "spring.redis.port=" + redis.getMappedPort(6379)
-            ).applyTo(ctx.getEnvironment());
-        }
-    }
-
-    @Autowired
-    private RedisRegistryImpl registry;
-
-    @Test
-    void checkTimeoutsShouldRemoveExpiredKeysAndRunCallback() throws Exception {
-        CountDownLatch latch = new CountDownLatch(1);
-
-        registry.checkTimeouts(Duration.ofMillis(100), latch::countDown);
-        long key = 777L;
-        registry.put(key, Instant.now());
-
-        boolean triggered = latch.await(2, TimeUnit.SECONDS);
-
-        assertTrue(triggered, "Timeout callback was not triggered");
-        assertFalse(registry.all().containsKey(key), "Expired process was not removed");
-    }
-
-    @AfterAll
-    static void stopContainer() {
-        redis.stop();
-    }
-
     @Configuration
+    @Import(RedisRegistryImpl.class)
     static class TestConfig {
         @Bean
         public RedissonClient redissonClient() {
@@ -80,5 +44,29 @@ public class RedisRegistryTest {
                     .setAddress("redis://" + redis.getHost() + ":" + redis.getMappedPort(6379));
             return Redisson.create(config);
         }
+    }
+
+    @Autowired
+    private RedisRegistryImpl registry;
+
+    @Test
+    void checkTimeoutsShouldRemoveExpiredKeysAndRunCallback() throws Exception {
+        // given
+        CountDownLatch latch = new CountDownLatch(1);
+        registry.checkTimeouts(Duration.ofMillis(100), latch::countDown);
+        long key = 123L;
+        registry.put(key, Instant.now());
+
+        // when
+        boolean triggered = latch.await(1000, TimeUnit.MILLISECONDS);
+
+        // then
+        assertNull(registry.get(key), "Expired process was not removed");
+        assertTrue(triggered, "Timeout callback was not triggered");
+    }
+
+    @AfterAll
+    static void stopContainer() {
+        redis.stop();
     }
 }

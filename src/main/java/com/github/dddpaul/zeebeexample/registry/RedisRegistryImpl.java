@@ -3,7 +3,9 @@ package com.github.dddpaul.zeebeexample.registry;
 import jakarta.annotation.PostConstruct;
 import org.redisson.api.RBucket;
 import org.redisson.api.RMap;
+import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -52,7 +54,8 @@ public class RedisRegistryImpl implements ProcessRegistry {
     @Override
     public void checkTimeouts(Duration deadline, Runnable onTimeout) {
         this.deadline = deadline;
-        redissonClient.getTopic("__keyevent@0__:expired").addListener(String.class, (channel, expiredKey) -> {
+        RTopic topic = redissonClient.getTopic("__keyevent@0__:expired", StringCodec.INSTANCE);
+        topic.addListener(String.class, (channel, expiredKey) -> {
             if (expiredKey.startsWith("zeebe:timeout:")) {
                 long key = Long.parseLong(expiredKey.substring("zeebe:timeout:".length()));
                 remove(key);
