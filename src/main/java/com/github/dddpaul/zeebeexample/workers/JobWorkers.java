@@ -99,14 +99,14 @@ public class JobWorkers {
 
     @JobWorker(type = "approve-app")
     public void approve(final ActivatedJob job) {
-        registry.remove(job.getKey());
+        registry.remove(job.getProcessInstanceKey());
         stats.incrementApproved();
         log.info("Application {} approved", job.getProcessInstanceKey());
     }
 
     @JobWorker(type = "reject-app")
     public void reject(final ActivatedJob job) {
-        registry.remove(job.getKey());
+        registry.remove(job.getProcessInstanceKey());
         stats.incrementRejected();
         log.info("Application {} rejected", job.getProcessInstanceKey());
     }
