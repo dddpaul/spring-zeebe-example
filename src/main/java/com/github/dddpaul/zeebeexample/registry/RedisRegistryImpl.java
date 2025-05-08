@@ -35,7 +35,8 @@ public class RedisRegistryImpl implements ProcessRegistry {
 
     @Override
     public void remove(long key) {
-        processes.remove(key);
+        RBucket<String> bucket = redissonClient.getBucket("zeebe:timeout:" + key);
+        bucket.delete(); // Reset TTL and remove key
     }
 
     @Override
