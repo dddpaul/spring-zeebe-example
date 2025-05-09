@@ -5,6 +5,9 @@ import com.github.dddpaul.zeebeexample.starter.ProcessStarterConfiguration;
 import com.github.dddpaul.zeebeexample.workers.WorkerProgressBar;
 import io.camunda.zeebe.spring.client.annotation.Deployment;
 import io.camunda.zeebe.spring.client.jobhandling.ZeebeClientExecutorService;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -14,7 +17,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -32,7 +37,7 @@ public class ZeebeExampleApplication implements ApplicationRunner {
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(virtualThreadPoolSize, Thread.ofVirtual().factory());
         return new ZeebeClientExecutorService(pool, true);
     }
-    
+
     @Autowired(required = false)
     private ProcessStarter starter;
 
