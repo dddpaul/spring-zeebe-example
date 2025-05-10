@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -76,16 +77,15 @@ class ProcessStarterTest {
 
     @Test
     void shouldThrowExceptionOnProcessCountMismatch() throws Exception {
-        // given
+        // given all processes executed successfully except one
         when(command.execute(anyLong())).thenReturn(mock(ProcessInstanceEvent.class));
-        when(config.count()).thenReturn(2L); // Expect 4 processes (2 threads * 2 count)
+        when(command.execute(1)).thenThrow(RuntimeException.class);
 
-        try {
-            // when
-            processStarter.startParallelProcesses();
-        } catch (IllegalStateException e) {
-            // then
-            assertEquals("Expected 4 processes, but started 3", e.getMessage());
-        }
+        // when
+        Exception ex = assertThrows(RuntimeException.class, () -> processStarter.startParallelProcesses());
+
+        // then one process for each thread should not be counted
+        assertEquals(IllegalStateException.class, ex.getCause().getClass());
+        assertEquals("Expected 6 processes, but started 4", ex.getCause().getMessage());
     }
 }

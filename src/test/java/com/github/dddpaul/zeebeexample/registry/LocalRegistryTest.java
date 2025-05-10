@@ -25,7 +25,7 @@ class LocalRegistryTest {
     }
 
     @Test
-    void shouldRemoveExpiredAndRunCallback(@Mock Runnable callback) throws Exception {
+    void shouldRemoveExpiredAndRunCallback() throws Exception {
         // given
         CountDownLatch latch = new CountDownLatch(1);
         registry.setExpiration(Duration.ofMillis(100), latch::countDown);
