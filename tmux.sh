@@ -67,42 +67,42 @@ tmux select-pane -D
 # Run 6th worker and display stats
 tmux select-pane -U
 tmux select-pane -L
-tmux send-keys -t $session 'SERVER_PORT=8006 make worker-bar-loom' Enter
+tmux send-keys -t $session 'SERVER_PORT=8006 make worker-bar' Enter
 tmux select-pane -R
 tmux send-keys -t $session 'watch -n1 "curl -sS localhost:8006/actuator/stats | jq ."' Enter
 
 # Run 5th worker and display stats
 tmux select-pane -U
 tmux select-pane -L
-tmux send-keys -t $session 'SERVER_PORT=8005 make worker-bar-loom' Enter
+tmux send-keys -t $session 'SERVER_PORT=8005 make worker-bar' Enter
 tmux select-pane -R
 tmux send-keys -t $session 'watch -n1 "curl -sS localhost:8005/actuator/stats | jq ."' Enter
 
 # Run 4th worker and display stats
 tmux select-pane -U
 tmux select-pane -L
-tmux send-keys -t $session 'SERVER_PORT=8004 make worker-bar-loom' Enter
+tmux send-keys -t $session 'SERVER_PORT=8004 make worker-bar' Enter
 tmux select-pane -R
 tmux send-keys -t $session 'watch -n1 "curl -sS localhost:8004/actuator/stats | jq ."' Enter
 
 # Run 3th worker and display stats
 tmux select-pane -U
 tmux select-pane -L
-tmux send-keys -t $session 'SERVER_PORT=8003 make worker-bar-loom' Enter
+tmux send-keys -t $session 'SERVER_PORT=8003 make worker-bar' Enter
 tmux select-pane -R
 tmux send-keys -t $session 'watch -n1 "curl -sS localhost:8003/actuator/stats | jq ."' Enter
 
 # Run 2th worker and display stats
 tmux select-pane -U
 tmux select-pane -L
-tmux send-keys -t $session 'SERVER_PORT=8002 make worker-bar-loom' Enter
+tmux send-keys -t $session 'SERVER_PORT=8002 make worker-bar' Enter
 tmux select-pane -R
 tmux send-keys -t $session 'watch -n1 "curl -sS localhost:8002/actuator/stats | jq ."' Enter
 
 # Run 1th worker and display stats
 tmux select-pane -U
 tmux select-pane -L
-tmux send-keys -t $session 'SERVER_PORT=8001 make worker-bar-loom' Enter
+tmux send-keys -t $session 'SERVER_PORT=8001 make worker-bar' Enter
 tmux select-pane -R
 tmux send-keys -t $session 'watch -n1 "curl -sS localhost:8001/actuator/stats | jq ."' Enter
 
