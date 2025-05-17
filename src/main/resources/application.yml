@@ -1,42 +1,36 @@
-# Configuration for Zeebe client
-zeebe:
+camunda:
   client:
-    # IP address and port of the Zeebe gateway
-    broker:
-      gateway-address: 192.168.0.100:26500
-    # Enable plaintext authentication
-    security:
-      plaintext: true
-    # Request timeout in seconds
-    # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultRequestTimeout, default = 10s
-    request-timeout: 10s
-    worker:
-      # Maximum number of jobs to be activated at the same time
-      # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.jobWorkerMaxJobsActive, default = 32
-      max-jobs-active: 64
+    zeebe:
+      base-url: http://192.168.0.100
+      # IP address and port of the Zeebe gateway
+      gateway-url: http://192.168.0.100:26500
+      # Request timeout in seconds
+      # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultRequestTimeout, default = 10s
+      request-timeout: 10s
       # Number of worker threads processing jobs in parallel
       # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.numJobWorkerExecutionThreads, default = 1
-      threads: 8
-    job:
-      # Poll interval for job activation requests
-      # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobPollInterval, default = 100ms
-      poll-interval: 100ms
-      # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobTimeout, default = 5 min
-      timeout: 300s
-    # Experimental job streaming feature, see https://github.com/camunda-community-hub/spring-zeebe/pull/490
-    # With Zeebe 8.4 it is stable, see https://docs.camunda.io/docs/apis-tools/java-client/job-worker/#job-streaming
-    # And https://zeebe-io.github.io/zeebe-chaos/2024/01/19/Job-Activation-Latency
-    # And https://zeebe-io.github.io/zeebe-chaos/2023/12/06/Job-Push-resiliency
-    # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.streamEnabled, default = false
-    default-job-worker-stream-enabled: true
-
-# Disable inbound connectors (to skip Operate client configuration)
-camunda:
+      execution-threads: 8
+      defaults:
+        # Maximum number of jobs to be activated at the same time
+        # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.jobWorkerMaxJobsActive, default = 32
+        max-jobs-active: 64
+        # Poll interval for job activation requests
+        # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobPollInterval, default = 100ms
+        poll-interval: 100ms
+        # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobTimeout, default = 5 min
+        timeout: 300s
+        # Experimental job streaming feature, see https://github.com/camunda-community-hub/spring-zeebe/pull/490
+        # With Zeebe 8.4 it is stable, see https://docs.camunda.io/docs/apis-tools/java-client/job-worker/#job-streaming
+        # And https://zeebe-io.github.io/zeebe-chaos/2024/01/19/Job-Activation-Latency
+        # And https://zeebe-io.github.io/zeebe-chaos/2023/12/06/Job-Push-resiliency
+        # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.streamEnabled, default = false
+        stream-enabled: true
+    # Skip Operate client configuration
+    operate:
+      enabled: false
+  # Disable inbound connectors (to skip Operate client configuration)
   connector:
     polling:
-      enabled: false
-  operate:
-    client:
       enabled: false
 
 # Configuration for the application
