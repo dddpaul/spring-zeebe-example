@@ -13,7 +13,7 @@ camunda:
       defaults:
         # Maximum number of jobs to be activated at the same time
         # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.jobWorkerMaxJobsActive, default = 32
-        max-jobs-active: 64
+        max-jobs-active: 32
         # Poll interval for job activation requests
         # io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.defaultJobPollInterval, default = 100ms
         poll-interval: 100ms
@@ -41,7 +41,7 @@ app:
       enabled: false
     virtual-thread-pool:
       enabled: false
-      size: 64
+      size: 32
   starter:
     enabled: false
     # Maximum number of scheduled tasks

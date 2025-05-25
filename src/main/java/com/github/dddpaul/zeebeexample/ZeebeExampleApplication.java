@@ -3,7 +3,11 @@ package com.github.dddpaul.zeebeexample;
 import com.github.dddpaul.zeebeexample.starter.ProcessStarter;
 import com.github.dddpaul.zeebeexample.starter.ProcessStarterConfiguration;
 import com.github.dddpaul.zeebeexample.workers.WorkerProgressBar;
+import io.camunda.zeebe.client.api.worker.BackoffSupplier;
+import io.camunda.zeebe.client.impl.worker.ExponentialBackoffBuilderImpl;
 import io.camunda.zeebe.spring.client.annotation.Deployment;
+import io.camunda.zeebe.spring.client.jobhandling.CommandExceptionHandlingStrategy;
+import io.camunda.zeebe.spring.client.jobhandling.DefaultCommandExceptionHandlingStrategy;
 import io.camunda.zeebe.spring.client.jobhandling.ZeebeClientExecutorService;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -14,6 +18,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +41,18 @@ public class ZeebeExampleApplication implements ApplicationRunner {
     public ZeebeClientExecutorService zeebeClientExecutorService() {
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(virtualThreadPoolSize, Thread.ofVirtual().factory());
         return new ZeebeClientExecutorService(pool, true);
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "app.worker.virtual-thread-pool.enabled", havingValue = "true")
+    public CommandExceptionHandlingStrategy commandExceptionHandlingStrategy(ZeebeClientExecutorService executor) {
+        BackoffSupplier backoffSupplier = new ExponentialBackoffBuilderImpl()
+                .maxDelay(3000L)
+                .minDelay(100L)
+                .backoffFactor(1.5)
+                .jitterFactor(0.2)
+                .build();
+        return new DefaultCommandExceptionHandlingStrategy(backoffSupplier, executor.get());
     }
 
     @Autowired(required = false)
