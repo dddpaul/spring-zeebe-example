@@ -169,9 +169,11 @@ worker-bar-jfr:
 	--app.registry.redis.enabled=true --spring.autoconfigure.exclude="" \
 	--app.worker.enabled=true --app.worker.progress-bar.enabled=true
 
+# execution-threads and max-jobs-active has no effect in virtual threads mode
 worker-bar-loom:
 	@LOGGING_LEVEL_COM_GITHUB_DDDPAUL_ZEEBEEXAMPLE_WORKERS=OFF \
 	java -jar build/libs/spring-zeebe-example-0.0.1-SNAPSHOT.jar \
+	--camunda.client.zeebe.execution-threads=1 --camunda.client.zeebe.defaults.max-jobs-active=1 \
 	--app.registry.redis.enabled=true --spring.autoconfigure.exclude="" \
 	--app.worker.enabled=true --app.worker.virtual-thread-pool.enabled=true --app.worker.progress-bar.enabled=true
 
